@@ -1,0 +1,60 @@
+
+    <div fxLayout="column" fxLayoutAlign="center stretch">
+        <mat-form-field appearance="outline" fxFlex *ngIf="whatChanged == 'tmpl'">
+            <mat-label >请输入模板名称</mat-label>
+            <input type="text" matInput [formControl]="obj" >
+            <mat-error *ngIf="obj.hasError('invalid')">{{obj.errors.msg}}</mat-error>
+        </mat-form-field>
+        <div *ngIf="whatChanged == 'tmpl'" style="visibility: hidden">
+            <mat-checkbox [(ngModel)]="checked" (change)="checkedChange()" fxFlex> 生效（选中生效，用户可创建该流程下的工单）</mat-checkbox>
+            <!-- <mat-checkbox [(ngModel)]="ddat['view']['preview']" fxFlex>{{ddat['view']['preview'] ? '预览' : '编辑'}}</mat-checkbox> -->
+        </div>
+        <!-- <mat-form-field appearance="outline" fxFlex *ngIf="whatChanged == 'node'">
+            <mat-label>请选择(部门或个人)，指定流程节点</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input type="text" matInput [formControl]="obj" [matAutocomplete]="auto3"> 
+            <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayWith" >
+                <mat-option *ngFor="let opt of opts | async; let j = index"  [value]="opt" > {{opt.name}}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="obj.hasError('invalid')">{{obj.errors.msg}}</mat-error>
+        </mat-form-field> -->
+        <div *ngIf="whatChanged == 'node'" fxLayout="column" fxLayoutAlign="center stretch">
+            <mat-form-field appearance="outline" fxFlex >
+                <mat-label >请指定流程节点的过期时间</mat-label>
+                <input type="number" matInput [formControl]="exp" >
+                <mat-error *ngIf="exp.hasError('invalid')">{{exp.errors.msg}}</mat-error>
+            </mat-form-field>
+            <mat-checkbox [(ngModel)]="priv" (change)="privChange()" fxFlex>工单关闭权限</mat-checkbox>
+            <br>
+            <small>请选中(部门或个人)，指定流程节点</small>
+            <treer (modelChange)="nodeSelect($event)" [onlySelectLeaf]="false"></treer>
+        </div>
+        <mat-form-field appearance="outline" fxFlex *ngIf="whatChanged == 'action'">
+            <mat-label >请选择(动作)，指定节点的处理动作</mat-label>
+            <!-- <input type="text" matInput [formControl]="obj" [matAutocomplete]="auto1" >
+            <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete" >
+                <mat-option *ngFor="let option of actions" [value]="option">
+                    {{option}}
+                </mat-option>
+            </mat-autocomplete> -->
+            <mat-select [formControl]="obj" required>
+                <mat-option *ngFor="let option of actions" [value]="option">
+                        {{option}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="obj.hasError('invalid')">{{obj.errors.msg}}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex *ngIf="whatChanged == 'action'">
+            <mat-label>请选择流程中已有(节点)，指定下一处理人</mat-label>
+            <!-- <input type="text" matInput [formControl]="target" [matAutocomplete]="auto2" disabled> 
+            <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayWith" >
+                <mat-option *ngFor="let opt of options | async; let j = index"  [value]="opt" > {{opt.name}}</mat-option>
+            </mat-autocomplete> -->
+            <mat-select [formControl]="target" [compareWith]="compareWith" required>
+                <mat-option *ngFor="let opt of options | async" [value]="opt">
+                    {{opt.name}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="target.hasError('invalid')">{{target.errors.msg}}</mat-error>
+        </mat-form-field>
+    </div>

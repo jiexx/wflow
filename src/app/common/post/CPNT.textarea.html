@@ -1,0 +1,14 @@
+<div>
+    <div class="textarea" fxLayout="row">
+        <div fxFlex=70 class="relative">
+            <div #textarea class="absolute" contenteditable="true" (click)="$event.preventDefault();$event.target.focus();" (input)="onInput($event.target)" (keyup)="onKey($event)"></div>
+            <div class="textarea-label" fxHide.lt-md>处理描述, 请告知问题节点，并详尽描述</div>
+        </div>
+        
+        <div fxFlex=30 class="relative">
+            <button mat-stroked-button class="text-grey"><span fxHide.lt-md><strong>拖动图片或文件到此</strong><p>或点击</p></span><span fxHide.gt-md><strong>图片</strong></span></button>
+            <uploader [multiple]="false" [autoSize]="true" [visibility]="'hidden'" [type]="'.pdf,.doc,.docx,.zip,.rar,.png,.jpeg,.jpg,.gif,.bmp'" [multiple]="true" [max]="3" (onComplete)="onComplete($event)"></uploader>
+        </div>
+    </div> 
+    <div class="mat-small mat-error" ><span *ngIf="content.hasError('invalid')">{{content.errors.msg}}</span>&nbsp;</div>
+</div>

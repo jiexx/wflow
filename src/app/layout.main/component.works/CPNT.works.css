@@ -1,0 +1,11 @@
+::ng-deep .nopadding  .mat-expansion-panel-body {
+    padding:  0 !important;
+}
+
+::ng-deep .h12 {
+    min-height: 1.2rem !important
+}
+::ng-deep .workContent p img{
+    max-width: 400px;
+    max-height: 300px;
+}

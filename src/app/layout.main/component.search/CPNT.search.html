@@ -1,0 +1,87 @@
+<div fxLayout="row" fxLayoutAlign="center stretch" fxLayoutGap="2rem" fxFill style="padding: 2rem">
+    <div style="width:100%">
+        <mat-expansion-panel [expanded]=true  >
+            <mat-expansion-panel-header>
+                <mat-panel-title class="titleName">
+                    知识中心查询
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxLayout="row" class="fx-lr">
+                <div style="width: 60%;">
+                    <div fxFlex class="mr-10">
+                        <mat-form-field appearance="outline" fxFlex>
+                            <mat-label>标签/标题/内容</mat-label>
+                            <input type="text" [formControl]="searchCtrl" (keydown)="enterSearch()"  matInput placeholder="关键字" >
+                        </mat-form-field>
+                    </div>
+                    <button mat-raised-button color="warn" (click)="load()" style="width:6rem;margin-top: 4px;margin-left: 16px;">查询</button>
+                </div>
+                <div style="margin-top: 14px;">
+                    <button color="warn" (click)="load()"
+                        style="width:6rem;
+                        color:white;height: 30px;
+                        border-radius:5px;
+                        border:1px solid gray;
+                        background-color: white;
+                        color: #333;
+                        cursor: pointer;
+                        margin-right: 10px;">
+                        <span *ngIf="sort.datatime == 1">
+                            <mat-icon style="font-size:0.5rem;width:0.5rem;height:0.5rem;padding: 0 0 0 0;cursor: pointer;">north
+                            </mat-icon>
+                            <mat-icon style="font-size:0.5rem;width:0.5rem;height:0.5rem;padding: 0 0 0 0;cursor: pointer;">north
+                            </mat-icon>
+                        </span>
+                        <span *ngIf="sort.datatime == -1">
+                            <mat-icon style="font-size:0.5rem;width:0.5rem;height:0.5rem;padding: 0 0 0 0;">south
+                            </mat-icon>
+                            <mat-icon style="font-size:0.5rem;width:0.5rem;height:0.5rem;padding: 0 0 0 0;">south
+                            </mat-icon>
+                        </span>
+                        提交时间
+                    </button>
+                </div>
+            </div>
+
+            <div fxLayout="column" fxLayoutAlign="center stretch" fxFill>
+                <ng-container *ngFor="let soln of all; let i = index ">
+                    <mat-divider></mat-divider>
+                        <div class="mt-20 mb-20 fxc">
+                                <div style="display: block;" class="w100 fx-lr">
+                                    <div style="width:74%;" class="fx-l">
+                                        <svg t="1605057439735" class="icon" style="float: left;" fill="#FF6A46" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13969" width="1rem" height="1rem">
+                                            <path d="M876.8 0H147.2C70.4 0 0 70.4 0 147.2v467.2C0 697.6 70.4 768 147.2 768h307.2l396.8 236.8v-217.6c0-12.8 12.8-19.2 19.2-19.2 83.2 0 147.2-70.4 147.2-147.2V147.2c6.4-76.8-64-147.2-140.8-147.2zM448 652.8V576c0-12.8 12.8-19.2 19.2-19.2h70.4c12.8 0 19.2 12.8 19.2 19.2v70.4c0 12.8-12.8 19.2-19.2 19.2H467.2c-6.4 6.4-19.2-6.4-19.2-12.8z m102.4-153.6H473.6c-12.8 0-25.6-12.8-25.6-25.6 6.4-38.4 12.8-70.4 38.4-96 6.4-6.4 25.6-25.6 64-57.6 25.6-19.2 32-44.8 32-70.4 0-19.2-12.8-44.8-25.6-51.2-12.8-12.8-25.6-19.2-44.8-19.2-25.6 0-51.2 6.4-64 19.2-12.8 12.8-25.6 32-25.6 51.2 0 12.8-12.8 19.2-19.2 19.2H332.8c-19.2 0-32-12.8-32-25.6 6.4-44.8 25.6-83.2 51.2-108.8 38.4-32 83.2-57.6 140.8-57.6 64 0 115.2 19.2 153.6 51.2 38.4 32 57.6 76.8 57.6 134.4 0 32-6.4 57.6-32 83.2-6.4 12.8-32 25.6-57.6 51.2-25.6 19.2-32 32-44.8 51.2-6.4 12.8-6.4 32-12.8 44.8 0 6.4-6.4 6.4-6.4 6.4z" p-id="13970"></path>
+                                        </svg>
+                                        <a class="wordTitle font-14 word-hide" [routerLink]="['/main/article' ]" [queryParams]="{id:soln.id}">
+                                            {{soln.solution}}
+                                        </a>
+                                    </div>
+                                    <div fxFlex="none" fxLayout="column" fxHide.lt-md>
+                                        发布时间:{{toLocalString(soln.datatime)}}
+                                    </div>
+                                </div>
+                                <div class="w100 fx-lr mt-20">
+                                    <div>
+                                        <mat-chip-list *ngIf="soln.tags && soln.tags.length > 0 && soln.tags.push">
+                                            <mat-chip color="primary" class="h12"  *ngFor="let tag of soln.tags; let j = index ">{{(tag.name)}} </mat-chip>
+                                        </mat-chip-list>
+                                    </div>
+                                    <div style="margin-top: 10px;">
+                                        <svg t="1605083482352" class="icon" viewBox="0 0 1026 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1928" width="1rem" height="1rem">
+                                            <path d="M373.083 512.935c0 18.335 3.647 36.669 10.664 53.609a140.456 140.456 0 0 0 30.37 45.454 140.505 140.505 0 0 0 45.451 30.367 140.464 140.464 0 0 0 53.613 10.661c18.336 0 36.67-3.64 53.61-10.661a140.541 140.541 0 0 0 45.454-30.367 140.539 140.539 0 0 0 30.366-45.454 140.48 140.48 0 0 0 10.668-53.61c0-18.342-3.648-36.674-10.668-53.613a140.492 140.492 0 0 0-30.366-45.452 140.504 140.504 0 0 0-45.454-30.37 140.5 140.5 0 0 0-53.61-10.662 140.513 140.513 0 0 0-53.613 10.661 140.433 140.433 0 0 0-45.45 30.371 140.39 140.39 0 0 0-30.371 45.452 140.532 140.532 0 0 0-10.664 53.614m0 0z" fill="#8a8a8a" p-id="1929"></path><path d="M1017.31 479.083s-0.583-13.343-124.09-128.784c-176.543-152.67-333.905-174.587-450.949-160.104-117.044 14.485-205.12 77.506-212.163 81.424C174.52 302.544 89.97 385.134 61.784 414.496c-28.18 29.356-44.234 41.886-53.624 61.067-22.315 45.798 8.22 91.596 8.22 91.596l77.893 78.292S269.647 839.44 499.816 839.44s339.386-98.87 385.576-134.879c46.19-36.014 102.944-101.389 131.917-140.138 20.359-43.454 0-85.34 0-85.34m-504.13 269.07c-129.91 0-235.224-105.312-235.224-235.218 0-129.912 105.313-235.224 235.224-235.224 129.907 0 235.218 105.312 235.218 235.224 0.001 129.906-105.31 235.217-235.218 235.217m0 0z" fill="#8a8a8a" p-id="1930"></path>
+                                        </svg>
+                                        <span style="position: relative;bottom: 3px;">
+                                            0浏览
+                                        </span>
+                                    </div>
+                                </div>
+                        </div>
+                </ng-container>
+            </div>
+            <mat-action-row>
+                <mat-paginator [length]="user.search.count" [pageSize]="5" [pageSizeOptions]="[5]"> </mat-paginator>
+            </mat-action-row>
+        </mat-expansion-panel>
+    </div>
+</div>
+

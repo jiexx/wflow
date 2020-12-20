@@ -1,0 +1,8 @@
+<h6 mat-dialog-header *ngIf="title"><b>{{title}}</b></h6>
+<mat-dialog-content>
+    {{msg.data.info}}&nbsp;
+</mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="button">
+    <button *ngIf="button.includes('no')" mat-raised-button  (click)="msg.data.action = 'no';" [mat-dialog-close]="true">取消</button>
+    <button *ngIf="button.includes('yes')" mat-raised-button (click)="msg.data.action = 'yes';" [mat-dialog-close]="true" cdkFocusInitial>确定</button>
+</mat-dialog-actions>

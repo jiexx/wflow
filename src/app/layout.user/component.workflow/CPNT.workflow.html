@@ -1,0 +1,130 @@
+<!-- <div class="relative"  > -->
+    <div style="padding: 1rem 2rem;min-height:90vh; position: absolute; left:0; right:0" fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="space-around stretch" fxLayoutAlign.gt-md="space-around  start" fxLayoutGap="1rem">
+        <div fxFlex.gt-md=15   fxLayout="column" >
+            <mat-card >
+                <mat-card-header >
+                    <mat-card-title><b>工作流模板管理</b></mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div  *ngFor="let wf of wfp.workflows; let i = index" [ngClass]="{'focused': wfp.cursor == wf }" >
+                        <mat-form-field   appearance="outline"  >
+                            <mat-label>选中修改名称</mat-label>
+                            <input type="text" matInput   [(ngModel)]="wf.name" (click)="wfp.cursor = wf" >
+                            <button *ngIf="wfp.workflows.length > 1" mat-icon-button matSuffix color="warn" (click)="wfp.cursor = wf;remove(wf)"><mat-icon class="mat-icon-big">remove</mat-icon></button>
+                        </mat-form-field>
+                    </div>
+                    
+                    <mat-form-field appearance="outline">
+                        <mat-label>新工作流模板名称</mat-label>
+                        <input type="text" matInput [formControl]="newtempt" >
+                        <mat-error *ngIf="newtempt.hasError('invalid')">{{newtempt.errors.msg}}</mat-error>
+                        <button mat-icon-button  color="warn" matSuffix (click)="newtempt.valid ? wfp.create(newtempt.value): newtempt.markAllAsTouched(); newtempt.reset() "><mat-icon class="mat-icon-big">add</mat-icon></button>
+                    </mat-form-field>
+                    <button mat-flat-button color="accent"  (click)="finish()" style="width:100%">提交</button>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        
+        <mat-card fxFlex=70  fxHide.lt-md   fxLayout="column">
+            <mat-card-header >
+                <mat-card-title><b>示意图</b></mat-card-title>
+                <!-- <mat-card-subtitle>操作提示<br>通过：是指给下一步角色处理<br>
+                    解决：是指当前角色已解决，直接转回给上一步角色处理<br>
+                    拒绝：是指当前角色退回到上一步角色处理<br>
+                    转交：是指当前角色转给别人，处理后转回当前角色<br></mat-card-subtitle> -->
+            </mat-card-header>
+            <mat-card-content  fxFlex  >
+                <ngx-graph [update$]="update$" [layoutSettings]="layoutSettings"  [zoomLevel]="zoom" [autoZoom]=false [links]=" wfp.cursor.drawing.flows" [nodes]="wfp.cursor.drawing.nodes" [clusters]="groups" > <!-- [layout]="layout" [curve]="curve"-->
+                    <ng-template #defsTemplate>
+                        <svg:g [attr.transform]="'translate('+offsetX+', '+offsetY+')'">
+                            <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4"
+                                orient="auto">
+                                <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+                            </svg:marker>
+                        </svg:g>
+                    </ng-template>
+    
+                    <ng-template #clusterTemplate let-cluster>
+                        <svg:g class="node cluster" [attr.transform]="'translate('+offsetX+', '+offsetY+')'">
+                            <svg:rect [attr.width]="cluster.dimension.width" [attr.height]="cluster.dimension.height"
+                                [attr.fill]="cluster.data.color" />
+                        </svg:g>
+                    </ng-template>
+    
+                    <ng-template #nodeTemplate let-node>
+                        <svg:g class="node" [attr.transform]="'translate('+offsetX+', '+offsetY+')'">
+                            <svg:circle *ngIf="node.id.indexOf('gw_o_')==0" [attr.cx]="node.dimension.width/2"
+                                [attr.cy]="node.dimension.height/2" r="10" fill="transparent" stroke="black"
+                                stroke-width="3" />
+                            <svg:rect *ngIf="node.id.indexOf('gw_o_')!=0" [attr.width]="node.dimension.width"
+                                [attr.height]="node.dimension.height" [attr.fill]="node.data.color" /> <!---->
+                            <svg:text alignment-baseline="central" [attr.transform]="'scale('+(1/zoom)+', '+(1/zoom)+')'" [attr.x]="10" [attr.y]="node.dimension.height / 2"
+                                [style.dominant-baseline]="node.dominantBaseline">
+                                {{node.label}}
+                            </svg:text>
+                        </svg:g>
+                    </ng-template>
+    
+                    <ng-template #linkTemplate let-link>
+                        <svg:g class="edge" [attr.transform]="'translate('+offsetX+', '+offsetY+')'">
+                            <svg:path class="line" stroke-width="1" marker-end="url(#arrow)"></svg:path>
+                            <svg:text class="edge-label" text-anchor="middle">
+                                <textPath class="text-path"  [attr.href]="'#' + link.id"
+                                    [style.dominant-baseline]="link.dominantBaseline" startOffset="50%">
+                                    {{link.label}}
+                                </textPath>
+                            </svg:text>
+                        </svg:g>
+                    </ng-template>
+                </ngx-graph>
+            </mat-card-content>
+        </mat-card>
+        <mat-card   fxFlex.gt-md=15 >
+            <mat-card-header  >
+                <mat-card-title><b>{{wfp.cursor.name}}::配置 </b></mat-card-title>
+            </mat-card-header>
+            <mat-card-content  >
+                <mat-vertical-stepper #stepper  >
+                    <mat-step  *ngFor="let step of wfp.cursor.steps; let i = index "  label="{{step.label}}:{{step.curr.cursor.name}}">
+                        <mat-form-field appearance="outline" *ngIf="i == 0">
+                            <mat-label>当前处理角色</mat-label>
+                            <mat-icon matPrefix>person</mat-icon>
+                            <input type="text" matInput [formControl]="current"  [matAutocomplete]="curr" (change)="step.curr.cursor = current.value"> 
+                            <mat-error *ngIf="current.hasError('invalid')">{{current.errors.msg}}</mat-error>
+                            <mat-autocomplete #curr="matAutocomplete"   (optionSelected)="step.curr.cursor = $event.option.value;update(i);" [displayWith]="displayWith">
+                                <mat-option *ngFor="let opt of notNullOptions | async; let j = index"  [value]="opt" > {{opt.name}}</mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" *ngIf="i != 0">
+                                <mat-label>当前处理角色</mat-label>
+                                <mat-icon matPrefix>person</mat-icon>
+                                <input type="text" matInput [formControl]="current"  [matAutocomplete]="curr" (change)="step.curr.cursor = current.value"> 
+                                <mat-error *ngIf="current.hasError('invalid')">{{current.errors.msg}}</mat-error>
+                                <mat-autocomplete #curr="matAutocomplete"   (optionSelected)="step.curr.cursor = $event.option.value;update(i);" [displayWith]="displayWith">
+                                    <mat-option *ngFor="let opt of nullOptions | async; let j = index"  [value]="opt" > {{opt.name}}</mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        <div style="width: 100%;padding-bottom: 1rem"> 
+                            <b>指定操作：</b><br>
+                            <ng-container *ngFor="let al of wfp.actlabels; let k = index">
+                                    <mat-checkbox color="warn"   (change)="update(i)" [disabled]="al.action=='_COMMIT'" [(ngModel)]="step.curr.actions[al.action]">{{al.label}}</mat-checkbox>
+                                    <br>
+                            </ng-container>
+                            
+                        </div>
+                        <mat-form-field appearance="outline" *ngIf="step.curr.actions['_FORWARD']">
+                            <mat-label>转交处理角色</mat-label>
+                            <mat-icon matPrefix>forward_to_inbox</mat-icon>
+                            <input type="text" matInput   [matAutocomplete]="fwd" >
+                            <mat-autocomplete #fwd="matAutocomplete" (optionSelected)="step.fwd.cursor = $event.option.value;update(i);" [displayWith]="displayWith">
+                                <mat-option *ngFor="let opt of wfp.options; let j = index" [value]="opt"  > {{opt.name}}</mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <button mat-raised-button color="warn" (click)="append(i, stepper)" style="color:white">下一步</button>&nbsp;
+                    </mat-step>
+                </mat-vertical-stepper>
+            </mat-card-content>
+        </mat-card>
+    </div>
+<!-- </div> -->
+<dlg></dlg>

@@ -1,0 +1,54 @@
+<!-- <div class="relative"  > -->
+    <div style="padding: 1rem 2rem;" fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="space-around stretch" fxLayoutAlign.gt-md="space-around  start" fxLayoutGap="1rem">
+        <div fxFlex.gt-md=18 *ngIf="views">
+            <groups [className]="'viewGroups'" [objects]="views" [title]="'工作流程模板'" [canRemove]="false" (onSelect)="selectViewer($event)" (onAppend)="createViewer($event)" (onChange)="changeViewer($event)" (onRemove)="removeViewer($event)"></groups>
+            <br>
+            <button mat-flat-button color="warn"  (click)="finish()" style="width:100%">提交</button>
+        </div>
+        <div fxFlex class="relative">
+            <div class="absolute" style="min-height: 90vh" [style]="viewerMgr.getViewer() && viewerMgr.getViewer().preview ? {'opacity':1, 'z-index':100} : {'opacity':0, 'z-index':-100}" >
+                <div style="position:absolute;right:0;z-index: 101;"><button mat-icon-button color="accent" *ngIf="tasks"><mat-icon (click)="viewerMgr.getViewer().preview = !viewerMgr.getViewer().preview" >{{ viewerMgr.getViewer().preview ? 'visibility': 'visibility_off'}}</mat-icon></button></div>
+                <mat-card style="background:white url('./assets/img/grid.gif')" fxFill>
+                    <mat-card-header >
+                        <mat-card-title>示意图</mat-card-title>
+                        <!-- <mat-card-subtitle>操作提示<br>通过：是指给下一步角色处理<br>
+                            解决：是指当前角色已解决，直接转回给上一步角色处理<br>
+                            拒绝：是指当前角色退回到上一步角色处理<br>
+                            转交：是指当前角色转给别人，处理后转回当前角色<br></mat-card-subtitle> -->
+                    </mat-card-header>
+                    <mat-card-content  fxFlex  >
+                        <div fxFill #viewerContainer tabindex="1" [style]="viewerMgr.getViewer() && viewerMgr.getViewer().preview ? {'opacity':1, 'z-index':100} : {'opacity':0, 'z-index':-100}"></div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div class="absolute" [style.opacity]="viewerMgr.getViewer() && viewerMgr.getViewer().preview ? 0 : 1" *ngIf="viewerMgr.getViewer()">
+                <div style="position:absolute;right:0;z-index: 101;"><button mat-icon-button color="accent" *ngIf="tasks"><mat-icon (click)="viewerMgr.getViewer().preview = !viewerMgr.getViewer().preview" >{{ viewerMgr.getViewer().preview ? 'visibility': 'visibility_off'}}</mat-icon></button></div>
+                <div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="start stretch" fxLayoutGap="1rem" *ngIf="tasks">
+                    <groups [className]="'taskGroups'" [options]="roleData" [objects]="tasks" [title]="viewTitle" (titleChange)="titleChange($event)" [canRemove]="true" [canCheck]="false" (onSelect)="selectTask($event)" (onAppend)="createTask($event)" (onChange)="changeTask($event)" (onRemove)="removeTask($event)"></groups>
+                    <groups [className]="'flowGroups'" [options]="tasks" [isAction]="true" [objects]="flows" [title]="taskTitle" [canRemove]="true" [canCheck]="false" (onAppend)="createFlow($event)" (onChange)="changeFlow($event)" (onRemove)="removeFlow($event)" *ngIf="flows" ></groups>
+                </div>
+            </div>
+        </div>
+        
+        <!-- <div fxFlex.gt-md=15 fxLayout="column" >
+            <mat-card    >
+                <mat-card-header  >
+                    <mat-card-title><b>::配置 </b></mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-form-field appearance="outline" *ngIf="viewerMgr.getViewer() && viewerMgr.getViewer().taskSelected()">
+                        <mat-label>当前处理部门</mat-label>
+                        <mat-icon matPrefix>person</mat-icon>
+                        <input type="text" matInput [formControl]="role"  [matAutocomplete]="curr"> 
+                        <mat-error *ngIf="role.hasError('invalid')">{{role.errors.msg}}</mat-error>
+                        <mat-autocomplete #curr="matAutocomplete"  [displayWith]="displayWith" (optionSelected)="viewerMgr.getViewer().setRole($event.option.value.id, $event.option.value.name)">
+                            <mat-option *ngFor="let opt of roleOptions | async; let j = index"  [value]="opt" > {{opt.name}}</mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </mat-card-content>
+            </mat-card>
+        </div> -->
+        
+    </div>
+<!-- </div> -->
+<dlg></dlg>

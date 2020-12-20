@@ -1,0 +1,10 @@
+mat-form-field {
+    width: 100%;
+}
+mat-toolbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-radius: 4px 4px 0 0;
+}

@@ -1,0 +1,407 @@
+import { Component, AfterViewInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Graph, Layout, Edge, Node } from '@swimlane/ngx-graph';
+import { UserService } from 'app/common/data/user';
+import * as dagre from 'dagre';
+import { IUploaderResult } from 'app/common/uploader/CPNT.uploader';
+import { enterTransition } from '../router.animation';
+import { Subject, Observable } from 'rxjs';
+import { FormGroup, FormControl } from '@angular/forms';
+import { WorkflowPlanner } from 'app/common/workflow/index';
+import { Bus, BusService } from 'app/common/bus/bus';
+import { CDialog } from 'app/common/dialog/CPNT.dialog';
+import { IDialogMessage } from 'app/common/dialog/ITF.dialog';
+import { CInfo } from 'app/common/dialog/CPNT.info';
+import { startWith, map } from 'rxjs/operators';
+
+
+export enum Orientation {
+    LEFT_TO_RIGHT = 'LR',
+    RIGHT_TO_LEFT = 'RL',
+    TOP_TO_BOTTOM = 'TB',
+    BOTTOM_TO_TOM = 'BT'
+}
+export enum Alignment {
+    CENTER = 'C',
+    UP_LEFT = 'UL',
+    UP_RIGHT = 'UR',
+    DOWN_LEFT = 'DL',
+    DOWN_RIGHT = 'DR'
+}
+
+export interface DagreSettings {
+    orientation?: Orientation;
+    marginX?: number;
+    marginY?: number;
+    edgePadding?: number;
+    rankPadding?: number;
+    nodePadding?: number;
+    align?: Alignment;
+    acyclicer?: 'greedy' | undefined;
+    ranker?: 'network-simplex' | 'tight-tree' | 'longest-path';
+    multigraph?: boolean;
+    compound?: boolean;
+}
+
+export interface DagreNodesOnlySettings extends DagreSettings {
+    curveDistance?: number;
+}
+
+const DEFAULT_EDGE_NAME = '\x00';
+const GRAPH_NODE = '\x00';
+const EDGE_KEY_DELIM = '\x01';
+
+class DagreNodesOnlyLayout implements Layout {
+    defaultSettings: DagreNodesOnlySettings = {
+        orientation: Orientation.LEFT_TO_RIGHT,
+        marginX: 5,
+        marginY: 5,
+        edgePadding: 100,
+        rankPadding: 100,
+        nodePadding: 50,
+        curveDistance: 10,
+        multigraph: false,
+        compound: true
+    };
+    settings: DagreNodesOnlySettings = {};
+
+    dagreGraph: any;
+    dagreNodes: any;
+    dagreEdges: any;
+
+    public run(graph: Graph): Graph {
+        this.createDagreGraph(graph);
+        dagre.layout(this.dagreGraph);
+
+        graph.edgeLabels = this.dagreGraph._edgeLabels;
+
+        for (const dagreNodeId in this.dagreGraph._nodes) {
+            const dagreNode = this.dagreGraph._nodes[dagreNodeId];
+            const node = graph.nodes.find(n => n.id === dagreNode.id);
+            node.position = {
+                x: dagreNode.x,
+                y: dagreNode.y
+            };
+            node.dimension = {
+                width: dagreNode.width,
+                height: dagreNode.height
+            };
+        }
+        for (const edge of graph.edges) {
+            this.updateEdge(graph, edge);
+        }
+
+        return graph;
+    }
+
+    public updateEdge(graph: Graph, edge: Edge): Graph {
+        const sourceNode = graph.nodes.find(n => n.id === edge.source);
+        const targetNode = graph.nodes.find(n => n.id === edge.target);
+        const rankAxis: 'x' | 'y' = this.settings.orientation === 'BT' || this.settings.orientation === 'TB' ? 'y' : 'x';
+        const orderAxis: 'x' | 'y' = rankAxis === 'y' ? 'x' : 'y';
+        const rankDimension = rankAxis === 'y' ? 'height' : 'width';
+        // determine new arrow position
+        const dir = sourceNode.position[rankAxis] <= targetNode.position[rankAxis] ? -1 : 1;
+        const startingPoint = {
+            [orderAxis]: sourceNode.position[orderAxis],
+            [rankAxis]: sourceNode.position[rankAxis] - dir * (sourceNode.dimension[rankDimension] / 2)
+        };
+        const endingPoint = {
+            [orderAxis]: targetNode.position[orderAxis],
+            [rankAxis]: targetNode.position[rankAxis] + dir * (targetNode.dimension[rankDimension] / 2)
+        };
+
+        const curveDistance = this.settings.curveDistance || this.defaultSettings.curveDistance;
+        // generate new points
+        edge.points = [startingPoint, endingPoint];
+        const edgeLabelId = `${edge.source}${EDGE_KEY_DELIM}${edge.target}${EDGE_KEY_DELIM}${DEFAULT_EDGE_NAME}`;
+        const matchingEdgeLabel = graph.edgeLabels[edgeLabelId];
+        if (matchingEdgeLabel) {
+            matchingEdgeLabel.points = edge.points;
+        }
+        return graph;
+    }
+
+    public createDagreGraph(graph: Graph): any {
+        const settings = Object.assign({}, this.defaultSettings, this.settings);
+        this.dagreGraph = new dagre.graphlib.Graph({ compound: settings.compound, multigraph: settings.multigraph });
+        this.dagreGraph.setGraph({
+            rankdir: settings.orientation,
+            marginx: settings.marginX,
+            marginy: settings.marginY,
+            edgesep: settings.edgePadding,
+            ranksep: settings.rankPadding,
+            nodesep: settings.nodePadding,
+            align: settings.align,
+            acyclicer: settings.acyclicer,
+            ranker: settings.ranker,
+            multigraph: settings.multigraph,
+            compound: settings.compound
+        });
+
+        // Default to assigning a new object as a label for each new edge.
+        this.dagreGraph.setDefaultEdgeLabel(() => {
+            return {
+                /* empty */
+            };
+        });
+
+        this.dagreNodes = graph.nodes.map(n => {
+            const node: any = Object.assign({}, n);
+            node.width = n.dimension.width;
+            node.height = n.dimension.height;
+            node.x = n.position.x;
+            node.y = n.position.y;
+            return node;
+        });
+
+        this.dagreEdges = graph.edges.map(l => {
+            let linkId: number = 1;
+            const newLink: any = Object.assign({}, l);
+            if (!newLink.id) {
+                newLink.id = 'a' + linkId.toString();
+                linkId++;
+            }
+            return newLink;
+        });
+
+        for (const node of this.dagreNodes) {
+            if (!node.width) {
+                node.width = 20;
+            }
+            if (!node.height) {
+                node.height = 30;
+            }
+
+            // update dagre
+            this.dagreGraph.setNode(node.id, node);
+        }
+
+        // update dagre
+        for (const edge of this.dagreEdges) {
+            if (settings.multigraph) {
+                this.dagreGraph.setEdge(edge.source, edge.target, edge, edge.id);
+            } else {
+                this.dagreGraph.setEdge(edge.source, edge.target);
+            }
+        }
+
+        return this.dagreGraph;
+    }
+}
+export function Step(context, t) {
+    this._context = context;
+    this._t = t;
+}
+
+Step.prototype = {
+    areaStart() {
+        this._line = 0;
+    },
+    areaEnd() {
+        this._line = NaN;
+    },
+    lineStart() {
+        this._x = this._y = NaN;
+        this._point = 0;
+    },
+    lineEnd() {
+        if (0 < this._t && this._t < 1 && this._point === 2) this._context.lineTo(this._x, this._y);
+        if (this._line || (this._line !== 0 && this._point === 1)) this._context.closePath();
+        // tslint:disable-next-line: ban-comma-operator
+        if (this._line >= 0) (this._t = 1 - this._t), (this._line = 1 - this._line);
+    },
+    point(x, y) {
+        x = +x;
+        y = +y;
+        switch (this._point) {
+            case 0:
+                this._point = 1;
+                this._line ? this._context.lineTo(x, y) : this._context.moveTo(x, y);
+                break;
+            case 1:
+                this._point = 2; // proceed
+            default: {
+                let xN;
+                let yN;
+                let mYb;
+                let mYa;
+                if (this._t <= 0) {
+                    xN = Math.abs(x - this._x) * 0.25;
+                    yN = Math.abs(y - this._y) * 0.25;
+                    mYb = this._y < y ? this._y + yN : this._y - yN;
+                    mYa = this._y > y ? y + yN : y - yN;
+
+                    this._context.quadraticCurveTo(this._x, this._y, this._x, mYb);
+                    this._context.lineTo(this._x, mYa);
+                    this._context.quadraticCurveTo(this._x, y, this._x + xN, y);
+                    this._context.lineTo(x - xN, y);
+                } else {
+                    const x1 = this._x * (1 - this._t) + x * this._t;
+
+                    xN = Math.abs(x - x1) * 0.25;
+                    yN = Math.abs(y - this._y) * 0.25;
+                    mYb = this._y < y ? this._y + yN : this._y - yN;
+                    mYa = this._y > y ? y + yN : y - yN;
+
+                    this._context.quadraticCurveTo(x1, this._y, x1, mYb);
+                    //>>>
+                    // const d = 50;
+                    // if(y < this._y && x < this._x) {
+                    //     this._context.lineTo(this._x, this._y);
+                    //     this._context.lineTo(x, this._y);
+                    // }
+                    // if(y > this._y && x < this._x) {
+                    //     this._context.lineTo(this._x, this._y);
+                    //     this._context.lineTo(this._x, y);
+                    // }
+                    // if(y > this._y && x > this._x) {
+                    //     this._context.lineTo(this._x, this._y);
+                    //     this._context.lineTo(x, this._y);
+                    // }
+                    // if(y < this._y && x > this._x) {
+                    //     this._context.lineTo(this._x, y);
+                    // }
+                    
+                    // this._context.lineTo(x, y);
+                    //<<<
+                    this._context.lineTo(x1, mYa);
+                    
+                    this._context.quadraticCurveTo(x1, y, x1 + xN, y);
+                    this._context.lineTo(x - xN, y);
+                }
+                break;
+            }
+        }
+        // tslint:disable-next-line: ban-comma-operator
+        (this._x = x), (this._y = y);
+    }
+};
+
+export const stepRound = function (context) {
+    return new Step(context, 1);
+};
+
+const codeValidator = (control: FormControl):{[key:string]: boolean | string} =>{
+    if(!control.value) {
+        return {invalid: true, msg: '不能为空'};
+    }
+}
+@Component({
+    templateUrl: './CPNT.workflow.html',
+    styleUrls: ['./CPNT.workflow.css'],
+    animations: [enterTransition],/**dagrejs/dagre/wiki */
+})
+export class CWorkflow extends Bus implements AfterViewInit {
+    name(): string {
+        return 'CWorkflow'
+    }
+    public curve: any = stepRound;
+    public layout: Layout = new DagreNodesOnlyLayout();
+    layoutSettings = {rankdir:'TB', nodesep:50}
+    // range = new FormGroup({
+    //     start: new FormControl(),
+    //     end: new FormControl()
+    // });
+    current = new FormControl('', [
+        codeValidator
+    ]);
+    update$: Subject<boolean> = new Subject();
+    zoom = 1.2;
+    offsetX = 50;
+    offsetY = 100;
+    append(i: number, stepper: any){
+        this.nullOptions = this.current.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter(value, this.wfp.options))
+        );
+        this.notNullOptions = this.current.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter(value, this.wfp.notNullOptions()))
+        );
+        
+        this.wfp.blank(i+1, '下一步');
+        this.cdr.detectChanges();
+        stepper.selectedIndex = i+1;
+        this.zoom = 1.2 - 0.1 * this.wfp.cursor.count();
+        this.wfp.build();
+        this.update$.next(true);
+    }
+    update(i: number){
+        if(!this.current.valid ){
+            this.current.markAllAsTouched();
+            return;
+        }
+        this.wfp.build();
+        this.update$.next(true);
+    }
+    ngAfterViewInit(): void {
+        // this.ready = true;
+        // this.zoomToFit$.next(true)
+
+    }
+    displayWith(opt){
+        return opt ? opt.name : '';
+    }
+    newtempt = new FormControl('', [
+        codeValidator
+    ]);
+    wfp : WorkflowPlanner;
+    nullOptions: Observable<{ id: string; name: string; }[]>;
+    notNullOptions: Observable<{ id: string; name: string; }[]>;
+    private _filter(value: string, options: { id: string; name: string; }[]): { id: string; name: string; }[] {
+        const filterValue = {}.toString.call(value) === "[object String]" ? value.toLowerCase() : '';
+        return options.filter(option => option.name.toLowerCase().includes(filterValue));
+    }
+    constructor(private user: UserService, private cdr:ChangeDetectorRef, protected bus: BusService) {
+        super(bus);
+        this.wfp = new WorkflowPlanner([
+            {id:'',name:''},
+            {id:'0',name:'全部'},
+            // {id:'2',name:'基地关键用户'},
+            // {id:'3',name:'板块管理员'},
+            // {id:'4',name:'驻场顾问'},
+            // {id:'5',name:'ISM'}
+        ]);
+        this.user.geRoles().then(d => {
+            this.wfp.options = [...this.wfp.options, ...(d || [])];
+        });
+        this.user.getWorkflow().then(d => {
+            let num = this.wfp.restore(d).count(); 
+            this.zoom = 1.2 - 0.1 * num
+        });
+        this.current.setValue(this.wfp.notNullOptions()[0]);
+        this.nullOptions = this.current.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter(value, this.wfp.options))
+        );
+        this.notNullOptions = this.current.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter(value, this.wfp.notNullOptions()))
+        );
+    }
+    stringify(a) {
+        return JSON.stringify(a);
+    }
+ 
+    groups = [
+        // {
+        //     id: 'third',
+        //     label: 'Cluster node',
+        //     childNodeIds: ['c1', 'c2', 'second']
+        // }
+    ];
+    async remove(wf){
+        this.bus.send(CDialog.name, <IDialogMessage>{command: 'open', data: {CPNT: CInfo, button: 'yes | no', returnto: this, title: '删除', info: '删除后不能恢复，确定删除？', appendix: wf.id} })
+    }
+    async finish() {
+        let r = await this.user.saveWorkflow(this.wfp.save());
+        this.bus.send(CDialog.name, <IDialogMessage>{command: 'open', data: {CPNT: CInfo, button: 'yes | no', returnto: this, title: '提交', info: r.code} })
+    }
+
+    async onDlgClose(msg: IDialogMessage) {
+        if(msg && msg.data && msg.data.action == 'yes' && msg.data.appendix){
+            let r = await this.user.rmWorkflow({id:msg.data.appendix});
+            this.wfp.rm()
+        }
+    }
+}

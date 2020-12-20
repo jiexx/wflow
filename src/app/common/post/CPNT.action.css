@@ -1,0 +1,15 @@
+/* ::ng-deep .nopadding  .mat-expansion-panel-body {
+    padding:  0 !important;
+} */
+
+.no-padding {
+    top: -2.2rem;
+    left: 1rem;
+}
+.text-grey {
+    position: absolute;
+    width: 100%;
+    height:auto;
+    top: -8px;
+    left: 8px;
+}

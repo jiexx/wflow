@@ -1,0 +1,14 @@
+<mat-form-field style="width:100%" [floatLabel]="'always'" [hideRequiredMarker]="true" (click)="$event.stopPropagation(); trigger.openPanel()">
+    <mat-chip-list #chipList>
+        <mat-chip *ngFor="let tag of model"  [removable]="true" (removed)="rmTag(tag.id)">
+            {{tag.name}}
+            <mat-icon matChipRemove >cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="选择标签..." #trigger="matAutocompleteTrigger"  [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" autofocus>
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete"  (optionSelected)="addTag($event)" [displayWith]="displayWith">
+        <mat-option *ngFor="let tag of tags" [value]="tag">
+            {{tag.name}}
+        </mat-option>
+    </mat-autocomplete>
+</mat-form-field>

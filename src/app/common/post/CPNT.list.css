@@ -1,0 +1,32 @@
+/* ::ng-deep .nopadding  .mat-expansion-panel-body {
+    padding:  0 !important;
+} */
+
+ mat-card-actions {
+    margin-bottom: -8px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+mat-card-subtitle {
+    margin-bottom: 12px;
+}
+mat-card {
+    padding-bottom: 8px;
+}
+mat-expansion-panel{
+    margin-top: 8px;
+}
+::ng-deep  .mat-expansion-panel-body {
+    padding-bottom: 0;
+    padding: 0;
+}
+mat-card-header ::ng-deep * {
+    word-break:break-all;
+    overflow: hidden;
+}
+::ng-deep  .subtitle-100 .mat-card-header-text {
+    width: 100%;
+}
+attachments {
+    width: 38rem;
+}

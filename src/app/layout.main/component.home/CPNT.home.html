@@ -1,0 +1,45 @@
+<div fxLayout="row" fxLayoutAlign="center stretch" fxLayoutGap="1rem" fxFill style="padding: 1rem">
+    <div fxFlex="80" fxFlex.lt-md="grow" class="relative" #reply>
+        <mat-expansion-panel #expandision  hideToggle>
+            <mat-expansion-panel-header>
+                <div fxFlex></div>
+                <mat-icon class="text-grey">{{expandision.expanded ? 'remove' : 'add'}}</mat-icon>
+            </mat-expansion-panel-header>
+            <mat-card class=" mat-elevation-z0">
+                <cnew (onCancel)="expandision.close()"></cnew>
+            </mat-card>
+        </mat-expansion-panel>
+        <br>
+        <posts [posts]="posts"></posts>
+    </div>
+    <div fxFlex="20" fxHide.lt-md>
+        <mat-form-field  style="width:100%">
+            <mat-label>查询信息</mat-label>
+            <input type="text" matInput value="" #srh>
+            <button mat-icon-button matSuffix color="warn" (click)="search(srh)"><mat-icon >search</mat-icon></button>
+        </mat-form-field>
+        <div fxLayout="row" fxLayoutAlign="start center" *ngFor="let top of tops; let i = index " >
+            <button mat-button [routerLink]="['/main/article']"  [queryParams]="{id:top.id}" >
+                {{top.solution}}
+            </button>
+        </div>
+        <mat-card class="left-menu-card">
+            <mat-card-header>
+                <mat-card-title >
+                    我的工单
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-divider></mat-divider>
+                <button class="text-warn" mat-menu-item (click)="work('I')">处理{{counter[0]}}</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" mat-menu-item (click)="work('V')">待验证{{counter[2]}}</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" mat-menu-item (click)="work('E')">退回{{counter[3]}}</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" mat-menu-item (click)="work('A')">全部{{counter[5]}}</button>
+            </mat-card-content>
+        </mat-card>
+        <br>
+    </div>
+</div>

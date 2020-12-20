@@ -1,0 +1,55 @@
+.mat-subheading-2 {
+    margin: 0
+}
+mat-toolbar {
+    height: auto;
+}
+.banner-bg {
+    background-color: white;
+}
+.banner-top {
+    height: auto;
+    padding: 1.5rem 0 0 0;
+    margin: 0;
+}
+.banner-bottom {
+    height: auto;
+    padding: 0 0 1.5rem 0;
+    margin: 0;
+    font-weight: 200;
+}
+
+/* mat-sidenav {
+    width: 10rem;
+    padding: 1rem;
+}
+
+nav ::ng-deep  {
+    border-bottom: none;
+}
+a {
+    display: flex;
+    flex-direction: column;
+}
+a div {
+    margin-top: -12px;
+    font-size: 0.5rem;
+    color: #FFFFFF;
+}
+a mat-icon {
+    height:2rem !important;
+    width:2rem !important;
+    font-size:2rem !important;
+    color: #FFFFFF;
+}
+mat-tabs.mat-default-theme mat-ink-bar, mat-tabs mat-ink-bar {
+    color: red !important;
+    background-color:red !important;
+}
+.mat-tab-link {
+    min-width: auto;
+}
+::ng-deep .mat-tab-links {
+    justify-content: space-evenly !important;
+    display: flex;
+} */

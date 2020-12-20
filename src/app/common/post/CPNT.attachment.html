@@ -1,0 +1,28 @@
+<div class="relative" *ngIf="model && model.length > 0" fxHide.lt-md>
+    <carousel [num]="4"  >
+        <div carousel-item *ngFor="let a of model; let i = index">
+            <a href="{{a.url}}" target="_blank" class="square-size" >
+                <img mat-card-lg-image *ngIf="isImage(a.filename)" src="{{a.url}}">
+                <div mat-card-lg-image *ngIf="!isImage(a.filename)" fxLayout="row" fxLayoutAlign="center center" [ngStyle]="{'background-color':getColor(a.filename)}">
+                    <div><mat-icon>{{getIcon(a.filename)}}</mat-icon></div>
+                    <div class="text-white">{{a.filename}}</div>
+                </div>
+            </a>
+        </div>
+    </carousel>
+</div>
+<div class="relative" *ngIf="model && model.length > 0" fxHide.gt-md>
+    <carousel [num]="1" [marginLeft]="58">
+        <div carousel-item *ngFor="let a of model; let i = index">
+            <a href="{{a.url}}" target="_blank" class="square-size" >
+                <img mat-card-lg-image *ngIf="isImage(a.filename)" src="{{a.url}}">
+                <div mat-card-lg-image *ngIf="!isImage(a.filename)" fxLayout="row" fxLayoutAlign="center center" [ngStyle]="{'background-color':getColor(a.filename)}">
+                    <div><mat-icon>{{getIcon(a.filename)}}</mat-icon></div>
+                    <div class="text-white">{{a.filename}}</div>
+                </div>
+            </a>
+        </div>
+    </carousel>
+</div>
+
+    

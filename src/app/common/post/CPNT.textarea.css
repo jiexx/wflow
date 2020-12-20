@@ -1,0 +1,42 @@
+[contenteditable] {
+    width: auto;
+    padding-top: 0.6rem;
+    height: calc(100% - 0.6rem);
+    overflow-y: scroll;
+}
+[contenteditable]:focus {
+    outline: 0 solid transparent;
+    border-radius: 4px 0 0 4px;
+    box-shadow: 0 0 0 2px black;
+    z-index: 0;
+}
+.textarea {
+    height: 10rem;
+    border: 1px solid rgb(220, 220, 220);
+    border-radius:  4px 4px 4px 4px;
+    margin-top: 0.6rem;
+}
+
+.mat-button, .mat-stroked-button {
+    border-radius: 0 4px 4px 0;
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    right: -1px;
+    height: auto;
+    width: 100%;
+}
+
+.textarea-label {
+    position: absolute;
+    background-color: white;
+    color: grey;
+    font-size: 0.3rem;
+    left: 1rem;
+    top: -0.6rem;
+    z-index: 110;
+    width: auto;
+}
+.mat-small.mat-error{
+    margin-bottom: -12px;
+}

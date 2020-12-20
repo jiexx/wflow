@@ -1,0 +1,99 @@
+<div fxLayout="row" fxLayoutAlign="center stretch" fxLayoutGap="1rem" fxFill style="padding: 1rem">
+    <div fxFlex>
+        <mat-accordion multi>
+            <mat-expansion-panel [expanded]="expanded">
+                <mat-expansion-panel-header>
+                    <mat-panel-title style="color: #ff4c00">
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div fxLayout="column" fxLayoutAlign="center stretch" fxFill fxLayoutGap="1rem">
+                    <mat-divider></mat-divider>
+                    <div fxLayout="row" fxLayoutAlign="space-between start">
+                        <div fxFlex="none">
+                            <mat-icon style="color: skyblue;padding-right: 1rem">account_circle</mat-icon>
+                        </div>
+                        <div fxFlex fxLayout="column" fxLayoutAlign="center stretch">
+                            <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+                                <div fxFlex> 张三 2020-01-01 3:00 提交 </div>
+                                <div fxFlex="nogrow">关闭</div>
+                            </div>
+                            <div fxFlex class="nowrap">
+                                采购发票33222211已审批，该任务主要是为了解决安装activiti插件后创建的流程模板中文乱码的问题
+                            </div>
+                            <div fxFlex class="nowrap">
+                                处理人<a href="">宋月</a>已审批，该任务主要是为了解决安装activiti插件后创建的流程模板中文乱码的问题,最终<a
+                                    href="">研发部</a>处理完毕，最后
+                            </div>
+                            <div fxFlex class="nowrap">
+                                <button mat-button color="accent" (click)="step= step == 2 ? 1 :2" style="padding:0">
+                                    <mat-icon>{{step==2 ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</mat-icon>所有答复
+                                </button>
+                            </div>
+                            <mat-expansion-panel hideToggle [expanded]="step === 2" class="mat-elevation-z0 nopadding"
+                                [expanded]=true>
+                                <div fxFlex fxLayout="column" fxLayoutAlign="center stretch">
+                                    <ng-container *ngFor="let c of num; let i = index ">
+                                        <div><br>
+                                            <mat-divider></mat-divider><br>
+                                        </div>
+                                        <div fxFlex fxLayout="row" fxLayoutAlign="space-between start">
+                                            <div fxFlex="none">
+                                                <mat-icon style="color: skyblue;padding-right: 1rem">account_circle
+                                                </mat-icon>
+                                            </div>
+                                            <div fxFlex fxLayout="column" fxLayoutAlign="center stretch">
+                                                <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+                                                    <div fxFlex> 王五 2020-01-01 3:00 提交 </div>
+                                                    <div fxFlex="nogrow">关闭</div>
+                                                </div>
+                                                <div fxFlex class="nowrap">
+                                                    采购发票33222211已审批，该任务主要是为了解决安装activiti插件后创建的流程模板中文乱码的问题
+                                                </div>
+                                                <div fxFlex class="nowrap">
+                                                    处理人<a href="">宋月</a>已审批，该任务主要是为了解决安装activiti插件后创建的流程模板中文乱码的问题,最终<a
+                                                        href="">研发部</a>处理完毕，最后
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </mat-expansion-panel>
+                        </div>
+                    </div>
+                </div>
+                <mat-action-row>
+                    <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"> </mat-paginator>
+                </mat-action-row>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+
+    <div fxFlex="20" fxHide.lt-md>
+        <mat-accordion multi>
+            <mat-expansion-panel [expanded]=true>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <b>快速筛选</b>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-vertical-stepper [linear]="true" #stepper ><!-- [selected]="{'editable': false}" -->>
+                    <ng-template matStepperIcon="edit">
+                        <mat-icon>done</mat-icon>
+                    </ng-template>
+                    <mat-step >
+                        <ng-template matStepLabel>2020-10-10 03:03 张三 评价</ng-template>
+                        该任务主要是为了解决安装activiti插件后创建的流程模板中文乱码的问题
+                    </mat-step>
+                    <mat-step >
+                        <ng-template matStepLabel>2020-10-10 03:03 李四 关闭</ng-template>
+                        该任务主要是为了解决安装activiti插件后创建的流程模板中文乱码的问题
+                    </mat-step>
+                    <mat-step *ngFor="let c of num; let i = index ">
+                        <ng-template matStepLabel>2020-10-10 03:03 王五 转发</ng-template>
+                        该任务主要是为了解决安装activiti插件后创建的流程模板中文乱码的问题
+                    </mat-step>
+                </mat-vertical-stepper>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>

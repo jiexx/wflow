@@ -1,0 +1,33 @@
+<div class="absolute" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card fxFlex=30  fxFlex.lt-md=90  [@enterAnimation]>
+        <!--  -->
+        <mat-card-header>
+            <mat-card-title>个人信息</mat-card-title>
+            <p><br><br></p>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="form" style="width:100%">
+                <div  fxLayout="row" fxLayoutAlign="center center" >
+                    <div class="relative" [ngClass]="{'avatar-circle': !!avatar }">
+                        <mat-icon  color="warn"  class="avatar" *ngIf="!avatar">person_add</mat-icon>
+                        <img [src]="avatar" class="absolute avatar-circle" *ngIf="avatar">
+                        <uploader [multiple]="false" [radius]="'50%'" [height]="50" [width]="50" (onComplete)="onComplete($event)"></uploader>
+                    </div>
+                </div>
+                <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input matInput placeholder="email" type="text" [formControl]="addr">
+                    <mat-error *ngIf="addr.hasError('invalid')">{{addr.errors.msg}}</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>电话</mat-label>
+                    <input matInput placeholder="能收快递的住址" type="text" [formControl]="intro">
+                    <mat-error *ngIf="intro.hasError('invalid')">{{intro.errors.msg}}</mat-error>
+                </mat-form-field>
+            </form>
+        </mat-card-content>
+        <mat-card-actions align="right">
+            <button mat-flat-button color="accent" mat-button (click)="submit()">提交</button>
+        </mat-card-actions>
+    </mat-card>
+</div>

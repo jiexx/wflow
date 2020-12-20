@@ -1,0 +1,27 @@
+<div fxLayout.gt-md="row" fxLayoutAlign.gt-md="space-between center" fxLayout.lt-md="column"  fxLayoutAlign.lt-md="start  center" fxLayoutGap="0.5rem">
+    <div *ngIf="state == 'I'" fxFlex>
+        <mat-radio-group [(ngModel)]="model.which" (change)="whichChange()" fxLayout.gt-md="row" fxLayoutAlign.gt-md="space-between center" fxLayout.lt-md="column"  fxLayoutAlign.lt-md="start  center" fxLayoutGap.lt-md="0.5rem">
+            <mat-radio-button [value]="act" color="warn" *ngFor="let act of actions; let i = index" [checked]="i==0" fxFlex>{{act.name}}</mat-radio-button>
+        </mat-radio-group>
+    </div>
+    <div *ngIf="state == 'V'" fxFlex>
+        <mat-radio-group  [(ngModel)]="model.which" (change)="rejectChange()" fxLayout.gt-md="row" fxLayoutAlign.gt-md="space-between center" fxLayout.lt-md="column"  fxLayoutAlign.lt-md="start  center" fxLayoutGap.lt-md="0.5rem">
+            <mat-radio-button value="Verified" color="warn" [checked]="true" fxFlex>验证关闭</mat-radio-button>
+            <mat-radio-button [value]="act" color="warn" *ngFor="let act of actions; let i = index" fxFlex>重新({{act.name}})</mat-radio-button>
+        </mat-radio-group>
+    </div> 
+    <div *ngIf="model.which == 'Verified'" fxFlex  class="relative">
+        <small class="text-grey">对本次服务还满意吗</small>
+        <stars  [rating]='model.rating' [itemId]='0'  (ratingClick)='ratingClick($event)'></stars>
+    </div>
+    <div  class="relative" fxFlex>
+        <div class="absolute no-padding">
+            <mat-form-field  appearance="standard" *ngIf="model.which && model.which.name =='转交'" (click)="$event.stopPropagation(); trigger.openPanel()">
+                <input type="text" matInput #trigger="matAutocompleteTrigger" [matAutocomplete]="auto" [formControl]="forward"  (focus)="forwardFocus()">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith">
+                    <mat-option *ngFor="let user of forwardOptions | async " [value]="user">{{user.name}}</mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+<div fxLayout="row" fxLayoutAlign="center stretch" fxLayoutGap="1rem" fxFill style="padding: 1rem">
+    <div fxFlex>
+            <mat-expansion-panel [expanded]="true" (opened)="true" (closed)="selection.clear()" *ngFor="let item of items; let i = index">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <b>{{item.name}}</b>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field>
+                    <mat-label>筛选</mat-label>
+                    <input matInput (keyup)="applyFilter($event, i)" placeholder="例如: 李..." #input>
+                </mat-form-field>
+                <table mat-table [dataSource]="item.list" matSort (matSortChange)="sortData($event, i)">
+                    <ng-container *ngFor="let des of item.descr;" [matColumnDef]="des.key" [cdkColumnDef]="des.key">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header > {{des.val}}</th>
+                        <td mat-cell *matCellDef="let e" >
+                            <ng-container *ngIf="!des.input && !des.options && !des.button">{{e[des.key]}}</ng-container>
+                            <mat-form-field floatLabel="never" *ngIf="des.input" appearance="fill">  
+                                <input matInput [type]="des.input" [placeholder]="des.val" [value]="e[des.key]" [(ngModel)]="e[des.key]">
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" *ngIf="des.options">
+                                <mat-label> {{des.val}}</mat-label>
+                                <input type="text" matInput [value]="showWith(e[des.key],des.key)" [matAutocomplete]="auto">
+                                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="e[des.key] = $event.option.value.id;" [displayWith]="displayWith">
+                                    <mat-option *ngFor="let opt of des.options;" [value]="opt">{{opt.name}}</mat-option>  
+                                </mat-autocomplete>
+                            </mat-form-field>
+                            <div *ngIf="des.button" style="margin-top: -1rem; padding: left 1rem;">
+                                <button mat-button (click)="openRepo(e)">{{des.val}}</button>
+                            </div>
+                            <div *ngIf="des.remove" style="margin-top: -1rem; padding: left 1rem;">
+                                <button mat-button (click)="rmRepo(e)">{{des.val}}</button>
+                            </div>
+                            <div *ngIf="des.store" style="margin-top: -1rem; padding: left 1rem;">
+                                <button mat-button>{{des.val}}</button>
+                            </div>
+                        </td>
+                        <!-- <td mat-cell *matCellDef="let e" *ngIf="!des.input"> {{e[des.key]}} </td> -->
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="cols[i]"></tr>
+                    <tr mat-row *matRowDef="let row; columns: cols[i];"></tr>
+                </table>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <mat-paginator [pageSizeOptions]="[50, 100]" showFirstLastButtons></mat-paginator>
+                    <button mat-raised-button  (click)="add()">新增</button>
+                    <button mat-raised-button color="warn"  style="width:10rem;color:white" (click)="rolesFinish()">提交</button>
+                </div>
+                <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
+            </mat-expansion-panel>
+    </div>
+</div>
+<dlg></dlg>

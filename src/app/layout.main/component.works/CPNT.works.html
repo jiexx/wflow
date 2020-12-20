@@ -1,0 +1,39 @@
+<div fxLayout="row" fxLayoutAlign="center stretch" fxLayoutGap="1rem" fxFill style="padding: 1rem">
+    <div fxFlex="80" fxFlex.lt-md="grow" class="relative" #reply>
+        <mat-expansion-panel #expandision  hideToggle>
+            <mat-expansion-panel-header>
+                <div fxFlex></div>
+                <mat-icon class="text-grey">search</mat-icon>
+            </mat-expansion-panel-header>
+            <mat-card class=" mat-elevation-z0">
+            </mat-card>
+        </mat-expansion-panel>
+        <br>
+        <lists [posts]="posts"></lists>
+    </div>
+    <div fxFlex="20" fxHide.lt-md>
+        <mat-card class="left-menu-card">
+            <mat-card-header>
+                <mat-card-title >
+                    分类检索
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-divider></mat-divider>
+                <button class="text-warn" mat-menu-item (click)="work('I')">处理中</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" mat-menu-item (click)="work('V')">待验证</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" mat-menu-item (click)="work('E')">退回</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" mat-menu-item (click)="work('O')">逾期</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" mat-menu-item (click)="work('C')">已关闭</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" mat-menu-item (click)="work('A')">全部</button>
+            </mat-card-content>
+        </mat-card>
+        <br>
+    </div>
+</div>
+

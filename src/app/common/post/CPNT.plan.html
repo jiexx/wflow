@@ -1,0 +1,8 @@
+<mat-form-field appearance="standard" style="width:100%;" [floatLabel]="'always'" [hideRequiredMarker]="false">
+    <mat-label>您可以点击切换提交其它产品的服务单</mat-label>
+    <input type="text" matInput [matAutocomplete]="auto" [formControl]="plan" required>
+    <mat-error *ngIf="plan && plan.hasError && plan.hasError('invalid')">{{plan.errors.msg}}</mat-error>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith">
+        <mat-option *ngFor="let p of plans;" [value]="p">{{p.name}}</mat-option>
+    </mat-autocomplete> 
+</mat-form-field>

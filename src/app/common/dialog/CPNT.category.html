@@ -1,0 +1,11 @@
+<h6 mat-dialog-header *ngIf="title"><b>{{title}}</b></h6>
+<mat-dialog-content>
+    <div fxLayout="column" fxLayoutAlign="space-between stretch" fxFill>
+        <button fxFlex mat-raised-button style="width:100%;margin-bottom: 1rem" [color]="msg.data.index==i ? 'accent' : ''" *ngFor="let c of msg.data.conf; let i = index " (click)="classify(i)">{{c.desc}}</button>
+        <button fxFlex mat-raised-button style="width:100%;margin-bottom: 1rem" color="warn" (click)="checkout()"><mat-icon>done</mat-icon>购买</button>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button *ngIf="button.includes('no')" mat-raised-button  (click)="msg.data.action = 'no';" [mat-dialog-close]="true">取消</button>
+    <button *ngIf="button.includes('yes')" mat-raised-button (click)="msg.data.action = 'yes';" [mat-dialog-close]="true" cdkFocusInitial>确定</button>
+</mat-dialog-actions>

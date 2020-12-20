@@ -1,0 +1,98 @@
+import { ChangeDetectorRef, Component, OnDestroy, AfterViewInit } from '@angular/core';
+import { UserService } from 'app/common/data/user';
+import { MatTableDataSource } from '@angular/material/table';
+
+
+@Component({
+    templateUrl: './CPNT.stats.html',
+    styleUrls: ['./CPNT.stats.css'],
+})
+export class CStats  implements AfterViewInit {
+    convert(){
+
+    }
+    all: {_id: string, id: string, flows?: any, schedid:string, userid: string, solution: string, attachments: string[], tags: {id:string, name:string}[], actions: any[], end: boolean, planid: string, ownerid: string, curr: [], state:string, datatime: string}[][] = [];
+    users:{ [_id:string]:{_id:string,name:string, label:string, status:string, roles:string,roleid:string,rolename:string}};
+    nextStates = {
+        V: '待评价',
+        S: '已关闭',
+        SS: '已关闭',
+        NS: '已关闭'
+    }
+    nextState(soln){
+        if(!soln.state){
+            return !soln.end ? '处理中' : '待验证';
+        }
+        return this.nextStates[soln.state];
+    }
+    tobedo(){
+        this.all.forEach(soln =>{
+            let commitee = this.users[soln[0].ownerid] ? this.users[soln[0].ownerid].name : '';
+            let owner = this.users[soln[soln.length-1].userid] ? this.users[soln[soln.length-1].userid].name: ''
+            let item = this.items.find(e=>e.name == this.nextState(soln[0]));
+            item.list.push({id:soln[0]._id,state:this.nextState(soln[0]),title:soln[0].solution, commitee:commitee,owner:owner,datetime:new Date(soln[0].datatime).toLocaleString()})
+            item.count ++;
+        })
+        this.items[0].list = new MatTableDataSource(this.items[0].list);
+        this.items[1].list = new MatTableDataSource(this.items[1].list);
+        this.items[2].list = new MatTableDataSource(this.items[2].list);
+        this.items[3].list = new MatTableDataSource(this.items[3].list);
+        if (this.items.length > 0) {
+            this._total = this.items.map(a => a.count).reduce((x, y) => x + y);
+            this._histogram_max = this.items.sort((a,b)=> a.count>b.count? a.count : b.count)[0].count+1;
+        }
+    }
+    ngAfterViewInit(): void {
+        
+        this.user.getUsers().then(users=>{
+            this.user.getRoles().then(roles=>{
+                this.users = users.reduce((p,e)=>{
+                    p[e.id] = {...e, ...{rolename: e.roles ? e.roles.split(',').map(r=>roles.find(s=>s.id == r).name).join(','): ''}}
+                    return p;
+                },  {});
+                this.user.getSchedules('all').then(data=>{
+                    if(data){
+                        this.all = [...this.all, ...Object.values(data)];
+                        this.tobedo();
+                    }
+                })
+            });
+        })
+    }
+    colTitles: string[] = ['id', 'state', 'title', 'commitee','owner','datetime'];
+    items: Array<any> = [
+        { name: '处理中', count: 0, color: 'yellow', list:[] },
+        { name: '待验证', count: 0, color: 'red', list:[]},
+        { name: '待评价', count: 0, color: 'green', list:[] },
+        { name: '已关闭', count: 0, color: 'purple', list:[] },
+    ];
+    _total: number = 0;
+    _histogram_max :number = 1;
+    _histogram_w : number = 300;
+    _histogram_gap : number = 8;
+    constructor(public user: UserService, private cdr:ChangeDetectorRef) {
+        
+
+    }
+
+    getPerimeter(radius: number, i: number): number {
+        return Math.PI * 2 * radius;
+    }
+
+    getColor(index: number): string {
+        return this.items[index].color;
+    }
+
+    getOffset(radius: number, index: number): number {
+        var percent = 0;
+
+        for (var i = 0; i < index; i++) {
+            percent += ((this.items[i].count) / this._total);
+        }
+        var perimeter = Math.PI * 2 * radius;
+        if(this.items[index].color=='yellow'){
+            var i  = 0;
+        }
+        return perimeter* percent;
+    }
+}

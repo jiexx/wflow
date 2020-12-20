@@ -1,0 +1,28 @@
+<div fxLayout="column" fxLayoutAlign="center stretch" fxLayoutGap="1rem" class="subtitle-100">
+    <mat-card *ngFor="let post of posts; let i = index ">
+        <mat-card-header>
+            <img mat-card-avatar [src]="post.avatar" *ngIf="post.avatar">
+            <mat-icon mat-card-avatar *ngIf="!post.avatar">account_circle</mat-icon>
+            <mat-card-title [innerHTML]="dispalyImage(post.title)"></mat-card-title>
+            <mat-card-subtitle>{{ post.username }} [{{post.rolename}}] {{toLocalString(post.datatime)}} </mat-card-subtitle>
+            <mat-card-subtitle>
+                <attachments [(model)]="post.attachments"></attachments>
+            </mat-card-subtitle>
+            <!-- <button mat-icon-button (click)="expandision.opened = !expandision.opened;"><mat-icon color="accent">{{!expandision.opened ? 'expand_less':'expand_more'}}</mat-icon></button> -->
+        </mat-card-header>
+        <mat-card-actions #expandision align="start">
+            <button mat-button color="accent" (click)="expandision.opened = !expandision.opened;" ><mat-icon>{{expandision.opened ? 'arrow_drop_up' : 'arrow_drop_down'}}</mat-icon>查看{{post.replies.length}}条处理单</button>
+        </mat-card-actions>
+        <mat-expansion-panel hideToggle [expanded]="!!expandision.opened" class="mat-elevation-z0 nopadding">
+            <mat-card-header *ngFor="let reply of post.replies; let j = index ">
+                <img mat-card-avatar [src]="reply.avatar" *ngIf="reply.avatar">
+                <mat-icon mat-card-avatar *ngIf="!reply.avatar">account_circle</mat-icon>
+                <mat-card-title [innerHTML]="dispalyImage(reply.content)"></mat-card-title>
+                <mat-card-subtitle>{{ reply.username }} [{{reply.rolename}}] {{toLocalString(reply.datatime)}} </mat-card-subtitle>
+                <mat-card-subtitle>
+                    <attachments [(model)]="reply.attachments"></attachments>
+                </mat-card-subtitle>
+            </mat-card-header> 
+        </mat-expansion-panel>
+    </mat-card>
+</div>

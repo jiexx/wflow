@@ -1,0 +1,17 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1rem" fxFill>
+    <div class="mat-card-header-text">
+        <plans [(model)]="model.plan"></plans> 
+        <tags [(model)]="model.tags"></tags>
+        <ctextarea [(model)]="model.textarea"></ctextarea>
+        <attachments [(model)]="model.textarea.attachments"></attachments>
+        <instead [(model)]="model.instead"></instead>
+    </div>
+    <div>
+    </div>
+    <div fxLayout="row wrap" fxLayoutAlign="space-between center">
+        <div fxFlex></div>
+        <button mat-button (click)="cancel()" class="text-grey">取消</button>
+        <button mat-button (click)="submit()" class="text-grey">确定</button>
+    </div>
+</div>
+<dlg></dlg>

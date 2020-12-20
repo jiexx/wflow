@@ -1,0 +1,184 @@
+<div fxLayout="row" fxLayoutAlign="center stretch" fxLayoutGap="1rem" fxFill style="padding: 1rem">
+    <div fxFlex>
+        <mat-accordion #accordion multi>
+            <mat-expansion-panel [expanded]="accordion.idx == 1 || accordion.idx == 5 || accordion.idx == 6 || !accordion.idx"   (closed)="selection.clear()" >
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <b>同步OA数据</b>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field appearance="outline">
+                    <mat-label>服务器IP</mat-label>
+                    <input type="text" matInput   [formControl]="hostIPctrl" >
+                    <mat-error *ngIf="hostIPctrl.hasError('invalid')">{{hostIPctrl.errors.msg}}</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>用户名</mat-label>
+                    <input type="password" matInput   [formControl]="hostUsernamectrl" >
+                    <mat-error *ngIf="hostUsernamectrl.hasError('invalid')">{{hostUsernamectrl.errors.msg}}</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>密码</mat-label>
+                    <input type="password" matInput   [formControl]="hostPwdctrl" >
+                    <mat-error *ngIf="hostPwdctrl.hasError('invalid')">{{hostPwdctrl.errors.msg}}</mat-error>
+                </mat-form-field>
+                <mat-action-row>
+                    <button mat-raised-button color="warn"  style="width:10rem;color:white" (click)="finishSync()">导入</button>
+                </mat-action-row>
+            </mat-expansion-panel>
+            <mat-expansion-panel [expanded]="accordion.idx == i+2"  (closed)="selection.clear()" *ngFor="let item of items; let i = index">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <b>{{item.name}}</b>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field>
+                    <mat-label>筛选</mat-label>
+                    <input matInput (keyup)="applyFilter($event, i)" placeholder="例如: 李..." #input>
+                </mat-form-field>
+                <table mat-table [dataSource]="item.list" matSort (matSortChange)="sortData($event, i)">
+                    <!-- <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef >
+                            <mat-checkbox color="warn" (change)="$event ? masterToggle(item.list) : null"
+                                [checked]="selection.hasValue() && isAllSelected(item.list)"
+                                [indeterminate]="selection.hasValue() && !isAllSelected(item.list)">
+                            </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <mat-checkbox color="warn" (click)="$event.stopPropagation()"
+                                (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container> -->
+                    <ng-container *ngFor="let des of item.descr;" [matColumnDef]="des.key" [cdkColumnDef]="des.key">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header > {{des.val}}</th>
+                        <td mat-cell *matCellDef="let e" >
+                            <ng-container *ngIf="!des.input && !des.options">{{e[des.key]}}</ng-container>
+                            <mat-form-field floatLabel="never" *ngIf="des.input" appearance="fill">  
+                                <input matInput [type]="des.input" [placeholder]="des.val" [value]="e[des.key]" [(ngModel)]="e[des.key]">
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" *ngIf="des.options">
+                                <mat-label> {{des.val}}</mat-label>
+                                <input type="text" matInput [value]="showWith(e[des.key],des.key)" [matAutocomplete]="auto">
+                                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="e[des.key] = $event.option.value.id;" [displayWith]="displayWith">
+                                    <mat-option *ngFor="let opt of des.options;" [value]="opt">{{opt.name}}</mat-option>  
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </td>
+                        <!-- <td mat-cell *matCellDef="let e" *ngIf="!des.input"> {{e[des.key]}} </td> -->
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="cols[i]"></tr>
+                    <tr mat-row *matRowDef="let row; columns: cols[i];"></tr>
+                </table>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <mat-paginator [pageSizeOptions]="[50, 100]" showFirstLastButtons></mat-paginator>
+                    <button mat-raised-button color="warn"  style="width:10rem;color:white" (click)="finish(item.finish)">提交</button>
+                </div>
+                <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
+            </mat-expansion-panel>
+            <mat-expansion-panel [expanded]="accordion.idx == 1 || accordion.idx == 5 || accordion.idx == 6 || !accordion.idx"  >
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <b>标签管理</b>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div fxLayout="row wrap" fxLayoutAlign="space-around center" fxLayoutGap="1rem">
+                    <div fxFlex>
+                        <mat-form-field appearance="outline">
+                            <mat-label>新增一级标签</mat-label>
+                            <input type="text" matInput [formControl]="tag0input" >
+                            <mat-error *ngIf="tag0input.hasError('invalid')">{{tag0input.errors.msg}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex>
+                        <button mat-raised-button  (click)="addTag0()" >确定</button>
+                    </div>
+                </div>
+                <div fxLayout="row wrap" fxLayoutAlign="space-around center" fxLayoutGap="1rem">
+                    <div fxFlex>
+                        <mat-form-field appearance="outline" (click)="$event.stopPropagation(); trigger.openPanel()">
+                            <mat-label>选择一级标签</mat-label>
+                            <input type="text" matInput #trigger="matAutocompleteTrigger" [matAutocomplete]="tag0AC" [formControl]="tag0ctrl"  >
+                            <mat-error *ngIf="tag0ctrl.hasError('invalid')">{{tag0ctrl.errors.msg}}</mat-error>
+                            <mat-autocomplete #tag0AC="matAutocomplete" (optionSelected)="tag0id = $event.option.value.id;" [displayWith]="displayWith0">
+                                <mat-option *ngFor="let tag0 of tag0s;" [value]="tag0">{{tag0.name}}</mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex>
+                        <button mat-raised-button  (click)="rmTag0()" >删除</button>
+                    </div>
+                </div>
+                <mat-form-field style="width:100%" [floatLabel]="'never'" *ngIf="tag0ctrl.value && tag0ctrl.value.childs.length > -1" (click)="taginput.focus()">
+                    <mat-chip-list #chipList >
+                        <mat-chip *ngFor="let tag of tag0ctrl.value.childs" [selectable]="false"[removable]="true" (removed)="rmTag(tag)">
+                        {{tag.name}}
+                        <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                        <input #taginput placeholder="输入标签..."
+                                [matChipInputFor]="chipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                [matChipInputAddOnBlur]="true"
+                                (matChipInputTokenEnd)="addTag($event)">
+                    </mat-chip-list>
+                </mat-form-field>
+                <mat-action-row>
+                    <button mat-raised-button color="warn" (click)="finishTags()" style="width:10rem;color:white" >提交</button>
+                </mat-action-row>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="accordion.idx == 1 || accordion.idx == 5 || accordion.idx == 6 || !accordion.idx"    >
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <b>逾期设置</b>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <!-- <mat-form-field appearance="outline">
+                    <mat-label>您可以点击切换提交其它产品的服务单</mat-label>
+                    <input type="text" matInput [matAutocomplete]="planAC" [formControl]="planctrl" >
+                    <mat-error *ngIf="planctrl.hasError('invalid')">{{planctrl.errors.msg}}</mat-error>
+                    <mat-autocomplete #planAC="matAutocomplete" (optionSelected)="planid = $event.option.value.id;" [displayWith]="displayWith">
+                        <mat-option *ngFor="let plan of plans;" [value]="plan">{{plan.name}}</mat-option>
+                    </mat-autocomplete>
+                </mat-form-field> -->
+                <mat-form-field appearance="outline" *ngFor="let plan of plans; let i = index">
+                    <mat-label>工作流程[<b>{{plan.name}}</b>] 逾期时间/天</mat-label>
+                    <input type="number" matInput   [formControl]="planExpctrl[i]" >
+                    <mat-error *ngIf="planExpctrl[i].hasError('invalid')">{{planExpctrl[i].errors.msg}}</mat-error>
+                </mat-form-field>
+                <mat-action-row>
+                    <button mat-raised-button color="warn" (click)="finishExpired()" style="width:10rem;color:white" >提交</button>
+                </mat-action-row>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+    </div>
+
+    <div fxFlex="20" fxHide.lt-md>
+        <mat-card class="left-menu-card">
+            <mat-card-header>
+                <mat-card-title >
+                    设置
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-divider></mat-divider>
+                <button class="text-warn" mat-menu-item>从OA同步用户数据</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" mat-menu-item>标签管理</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" mat-menu-item>逾期设置</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" [routerLink]="['/user/wf']" mat-menu-item>流程配置</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" [routerLink]="['/main/repo']" mat-menu-item>知识配置</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" [routerLink]="['/user/users']" mat-menu-item>用户配置</button>
+                <mat-divider></mat-divider>
+                <button class="text-warn" [routerLink]="['/main/roles']" mat-menu-item>角色(部门)配置</button>
+            </mat-card-content>
+        </mat-card>
+        
+    </div>
+</div>
+<dlg></dlg>

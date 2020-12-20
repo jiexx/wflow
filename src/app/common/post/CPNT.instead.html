@@ -1,0 +1,27 @@
+<div fxLayout="row wrap" fxLayoutAlign="start center">
+    <mat-form-field appearance="standard" style="max-width:5rem">
+        <mat-label>代替申请</mat-label>
+        <input type="text" matInput [matAutocomplete]="auto" [formControl]="instead" (focus)="insteadFocus()">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="insteadSelected($event)" [displayWith]="displayWith">
+            <mat-option *ngFor="let user of insteads | async " [value]="user">{{user.name}}</mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    &nbsp;
+    <mat-form-field appearance="standard" style="max-width:7rem" [floatLabel]="'always'">
+        <mat-label>本人</mat-label>
+        <mat-icon matPrefix>person</mat-icon>
+        <input type="tel" matInput placeholder="1580000000" [value]="model.label || '' " disabled>
+    </mat-form-field>
+    &nbsp;
+    <mat-form-field appearance="standard" style="max-width:10rem" [floatLabel]="'always'">
+        <mat-label>电话</mat-label>
+        <mat-icon matPrefix>phone</mat-icon>
+        <input type="tel" matInput placeholder="1580000000" [value]="model.tel || '' " disabled>
+    </mat-form-field>
+    &nbsp;
+    <mat-form-field appearance="standard" style="max-width:15rem" [floatLabel]="'always'">
+        <mat-label>邮件</mat-label>
+        <mat-icon matPrefix>email</mat-icon>
+        <input type="email" matInput placeholder="333@333" [value]="model.email || '' " disabled>
+    </mat-form-field>
+</div>

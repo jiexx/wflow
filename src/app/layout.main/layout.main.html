@@ -1,0 +1,74 @@
+<mat-toolbar class="banner-bg" fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex=70 fxFlex.lt-md=100 fxLayout="column" fxLayoutAlign="center start" >
+        <div fxFlex class="banner-top mat-display-3">
+            <span class="text-primary">PP</span><span>工单</span>
+        </div>
+        <div fxFlex class="banner-bottom">
+            <span class="text-warn">Build&nbsp;</span><span>Your Workflow</span> 
+        </div>
+    </div>
+</mat-toolbar>
+<mat-toolbar color="primary" fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex.gt-md=70 fxFlex.lt-md=100  fxLayout="row" fxLayoutAlign="space-between center" >
+        <div fxFlex fxHide.gt-md>
+            <button mat-button [matMenuTriggerFor]="message" ><mat-icon>menu</mat-icon></button>
+            <mat-menu #message="matMenu">
+                <a mat-menu-item [routerLink]="['/main/home']" ><!-- [routerLinkActiveOptions]="{exact:true}"  > -->
+                    <div class="mat-subheading-2">首页</div>
+                </a>
+                <a mat-menu-item  [routerLink]="['/main/work']">
+                    <div class="mat-subheading-2">工单列表</div>
+                </a>
+                <a mat-menu-item  [routerLink]="['/main/stats']"  *ngIf="privileges==18 || privileges==10"  >
+                    <div class="mat-subheading-2">统计报表</div>
+                </a>
+                <a mat-menu-item  [routerLink]="['/main/search']" >
+                    <div class="mat-subheading-2">知识中心</div>
+                </a>
+                <a mat-menu-item [routerLink]="['/main/setting']"  *ngIf="privileges==18 || privileges == 8"  >
+                    <div class="mat-subheading-2">后台管理</div>
+                </a>
+            </mat-menu>
+        </div>
+        <nav mat-tab-nav-bar backgroundColor="primary" fxFlex fxHide.lt-md>
+            <a mat-tab-link [routerLink]="['/main/home']"  (click)="at = 0" [active]="!at"><!-- [routerLinkActiveOptions]="{exact:true}"  > -->
+                <div class="mat-subheading-2">首页</div>
+            </a>
+            <a mat-tab-link  [routerLink]="['/main/work']" (click)="at = 1" [active]="at == 1">
+                <div class="mat-subheading-2">工单列表</div>
+            </a>
+            <a mat-tab-link  [routerLink]="['/main/stats']"  *ngIf="privileges==18 || privileges==10"  (click)="at = 2" [active]="at == 2">
+                <div class="mat-subheading-2">统计报表</div>
+            </a>
+            <a mat-tab-link  [routerLink]="['/main/search']" (click)="at = 3" [active]="at == 3">
+                <div class="mat-subheading-2">知识中心</div>
+            </a>
+            <a mat-tab-link [routerLink]="['/main/setting']"  *ngIf="privileges==18 || privileges == 8"  (click)="at = 5" [active]="at == 5" >
+                <div class="mat-subheading-2">后台管理</div>
+            </a>
+        </nav>
+        <div fxFlex="none">
+            <button mat-button [matMenuTriggerFor]="message" ><mat-icon [matBadge]="num" matBadgeColor="warn" >notification_important</mat-icon></button>
+            <mat-menu #message="matMenu">
+                <button mat-menu-item *ngFor="let c of counter;">{{c}}</button>
+            </mat-menu>
+            <button mat-button [matMenuTriggerFor]="account"><mat-icon *ngIf="!avatar">account_circle</mat-icon><img [src]="avatar" class="avatar-circle" *ngIf="avatar"></button>
+            <mat-menu #account="matMenu">
+                <button mat-menu-item [routerLink]="['/user/profile']">个人资料</button>
+                <button mat-menu-item (click)="logout()">注销</button>
+            </mat-menu>
+        </div>
+    </div>
+</mat-toolbar>
+<mat-sidenav-container [style.marginTop.px]="mobileQuery.matches ? 0 : 0"  [class.solution-dark-theme]="isDarkThemeActive">
+    <mat-sidenav-content>
+            
+
+            <div fxFlex="grow" fxLayout="row" fxLayoutAlign="center none" class="relative" > 
+                <div fxFlex="70" fxFlex.lt-md="100" ><!--  [@routerTransition]="prepareRoute(o)" > -->
+                    <router-outlet #o="outlet" ></router-outlet>  
+                </div>
+            </div>
+
+    </mat-sidenav-content>
+</mat-sidenav-container>

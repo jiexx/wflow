@@ -1,0 +1,13 @@
+
+<mat-dialog-header *ngIf="title">
+    <b class="mat-card-title">{{title}}</b>
+    <mat-icon class="close" [mat-dialog-close]="true">close</mat-icon>
+</mat-dialog-header>
+
+<mat-dialog-content>
+    <ng-container *ngComponentOutlet="msg.data.component; injector: inj"></ng-container>
+</mat-dialog-content>
+<mat-dialog-actions align="end" *ngIf="button">
+    <button *ngIf="button.includes('no')" mat-raised-button  (click)="msg.data.action = 'no';" [mat-dialog-close]="true">取消</button>
+    <button *ngIf="button.includes('yes')" mat-raised-button (click)="msg.data.action = 'yes';" [mat-dialog-close]="true" cdkFocusInitial>确定</button>
+</mat-dialog-actions>

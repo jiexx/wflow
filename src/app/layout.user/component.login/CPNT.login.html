@@ -1,0 +1,49 @@
+<div class="absolute" style="background-repeat:no-repeat;background-position:center center;background-size:cover;background-image:url({{this.bg}})"></div>
+<div class="absolute"  fxLayout="row" fxLayoutAlign="center center" fxLayoutGap=1rem [ngStyle]="{'z-index': step == 2 ? '110' : '100'}" >
+    <div fxFlex=35  fxHide.lt-md >
+        <p class="text-white mat-display-2">Follow your topics</p>
+        <p class="text-white">Fill in the form to get a free quote from our professionals. Uniquely plagiarize multifunctional applications whereas standardize bandwidth. Competently maintain cooperative materials through global experiences.</p>
+    </div> 
+    <mat-card  fxFlex=35  fxFlex.lt-md=90  *ngIf="step == 2"  [@enterAnimation]>  <!--  [style.visibility]="step == 1 ? 'visible' : 'hidden'"-->
+        <mat-toolbar  color="warn">登陆</mat-toolbar>
+        <br><br><br>
+        <mat-card-content>
+            <form [formGroup]="form" style="width:100%">
+                <mat-form-field>
+                    <mat-label>用户名</mat-label>
+                    <input matInput placeholder="测试用户名 root 密码 1111" type="tel" [formControl]="mobile">
+                    <mat-error *ngIf="mobile.hasError('invalid')">{{mobile.errors.msg}}</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>密码</mat-label>
+                    <input matInput placeholder="1111" type="text" [formControl]="code">
+                    <mat-error *ngIf="code.hasError('invalid')">{{code.errors.msg}}</mat-error>
+                </mat-form-field>
+            </form>
+        </mat-card-content>
+        <mat-card-actions align="right">
+            <button mat-flat-button color="accent" mat-button (click)="submit()">确定</button>
+        </mat-card-actions>
+    </mat-card>
+</div>
+<div  class="absolute" fxLayout="row" fxLayoutAlign="center center" style="background-color:rgba(20,20,20,.8);"  [ngStyle]="{'z-index': step == 1 ? '110' : '100'}"> <!--  [ngStyle]="{'z-index': step == 2 ? '110' : '100'}" -->
+    <mat-card  fxFlex=35  fxFlex.lt-md=90  *ngIf="step == 1" [@enterAnimation]>
+        <mat-card-header>
+            <mat-card-title>登陆{{step}}</mat-card-title>
+            <p><br><br></p>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="form" style="width:100%">
+                <mat-form-field>
+                    <mat-label>密码</mat-label>
+                    <input matInput placeholder="1111" type="text" [formControl]="code">
+                    <mat-error *ngIf="code.hasError('invalid')">{{code.errors.msg}}</mat-error>
+                </mat-form-field>
+            </form>
+        </mat-card-content>
+        <mat-card-actions align="right">
+            <button mat-flat-button color="accent" mat-button (click)="submit()">提交</button>
+        </mat-card-actions>
+    </mat-card>
+</div>
+

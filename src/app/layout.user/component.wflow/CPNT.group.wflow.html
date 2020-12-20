@@ -1,0 +1,26 @@
+<mat-card >
+    <mat-card-header >
+        <mat-card-title><b *ngIf="className!='taskGroups'">{{title}}</b> 
+            <mat-form-field appearance="outline" fxFlex *ngIf="className=='taskGroups'" style="width:auto">
+                <input type="text" matInput [formControl]="titleCtrl" >
+                <mat-error *ngIf="titleCtrl.hasError('invalid')">{{titleCtrl.errors.msg}}</mat-error>
+            </mat-form-field>
+        </mat-card-title>
+        <mat-card-subtitle><small>{{className=='viewGroups'?'流程模板': (className=='taskGroups'?'流程模板的处理节点':'节点的动作')}}:单击选中,双击{{className=='viewGroups'?'修改(名称)': (className=='taskGroups'?'指定(部门/个人)':'修改(名称)/指定下一步骤(部门/个人)')}}</small></mat-card-subtitle>
+        
+    </mat-card-header>
+    <mat-card-content  #btnGroup >
+        <ng-container *ngFor="let obj of objects; let i = index">
+            <div fxLayout="row" fxLayoutAlign="center center"> 
+                <div *ngIf="selected == i" fxFlex="grow"><button mat-raised-button  style="width:100%;" color="accent" (click)="select(obj,i); " (dblclick)="change(obj, i)">{{obj.name}}</button></div>
+                <div *ngIf="selected != i" fxFlex="grow"><button  mat-stroked-button  style="width:100%;color:black" (click)="select(obj,i); " (dblclick)="change(obj, i)">{{obj.name}}</button></div>
+                <div fxFlex *ngIf="canRemove"> <button  mat-icon-button  (click)="remove(obj,i)"><mat-icon>delete_forever</mat-icon></button></div>
+            </div>
+            <br>
+        </ng-container>
+        <div fxLayout="row">
+            <button mat-raised-button  (click)="append()" style="width:100%;color:black">+{{className=='viewGroups'?'模板': (className=='taskGroups'?'节点':'动作')}}</button>
+        </div>
+        <br>
+    </mat-card-content>
+</mat-card>

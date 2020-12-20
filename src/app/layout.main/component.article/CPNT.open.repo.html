@@ -1,0 +1,26 @@
+<div>
+    <div fxLayout="column" fxLayoutAlign="center stretch" fxFill fxLayoutGap="1rem">
+        <mat-divider></mat-divider>
+        <div fxFlex fxLayout="row" fxLayoutAlign="space-between start">
+            <div fxFlex fxLayout="column">
+                <mat-chip-list *ngIf="item.tags  && item.tags.length > 0 && item.tags.push">
+                    <mat-chip color="primary" class="h12"  *ngFor="let tag of item.tags; let j = index ">{{(tag.name)}}</mat-chip>
+                </mat-chip-list>
+            </div>
+            <div fxFlex="none" fxLayout="column" fxHide.lt-md>
+                <div fxFlex>发布时间:{{toLocalString(item.datatime)}}</div>
+            </div>
+        </div>
+        <mat-form-field style="width:100%;" appearance="outline">
+            <mat-label>工单内容</mat-label>
+            <textarea style="white-space: pre-wrap;" matInput [formControl]="solution" placeholder="请告知问题节点，并详尽描述" rows="8" cols="40"></textarea>
+            <mat-error *ngIf="solution.hasError('invalid')">{{solution.errors.msg}}</mat-error>
+        </mat-form-field>
+        <mat-radio-group  [(ngModel)]="item['flag']" >
+            <mat-radio-button value="hidden" color="warn" [checked]="item['flag'] == 'hidden'">不导入</mat-radio-button>
+            <mat-radio-button value="show" color="warn" [checked]="item['flag'] == 'show'">导入</mat-radio-button>
+            <mat-radio-button value="top" color="warn" [checked]="item['flag'] == 'top'">推荐</mat-radio-button>
+        </mat-radio-group>
+    </div>
+</div>
+<dlg></dlg>

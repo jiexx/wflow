@@ -1,0 +1,20 @@
+.square-size{
+    padding: 0 16px 0 0
+}
+.relative {
+    height: 10rem;
+    margin-top: 0.6rem;
+}
+mat-icon {
+    color: white;
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+    text-decoration: none
+}
+.text-white {
+    position: absolute;
+    bottom: 1rem;
+    font-size: 0.3rem;
+    text-decoration: none
+}

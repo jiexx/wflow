@@ -1,0 +1,25 @@
+<div fxLayout="column" fxLayoutAlign="center center" fxFill >
+    <mat-toolbar class="banner-bg" fxLayout="row" fxLayoutAlign="center center">
+        <div fxFlex=70 fxFlex.lt-md=100 fxLayout="column" fxLayoutAlign="center start" >
+            <div fxFlex class="banner-top mat-display-3">
+                <span class="text-primary">PP</span><span>工单</span>
+            </div>
+            <div fxFlex class="banner-bottom">
+                <span class="text-warn">Build&nbsp;</span><span>Your Workflow</span> 
+            </div>
+        </div>
+    </mat-toolbar>
+    <mat-toolbar color="primary" fxLayout="row" fxLayoutAlign="center center">
+        <div fxFlex=70 fxLayout="row" fxLayoutAlign="space-between center" >
+            <nav mat-tab-nav-bar backgroundColor="primary" fxFlex >
+                <a mat-tab-link  (click)="at = 0;back()" [active]="!at"><!-- [routerLinkActiveOptions]="{exact:true}"  > -->
+                    <div class="mat-subheading-2"><mat-icon>back</mat-icon>返回</div>
+                </a>
+            </nav>
+        </div>
+    </mat-toolbar>
+    <div fxFlex="grow" fxFill class="relative">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+    

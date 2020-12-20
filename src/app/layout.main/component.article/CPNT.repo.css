@@ -1,0 +1,50 @@
+::ng-deep .nopadding  .mat-expansion-panel-body {
+    padding:  0 !important;
+}
+mat-form-field {
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+}
+  
+th, td {
+    overflow: hidden;
+    width:auto;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.mat-column-id {
+    flex: 0 0 2rem;
+    width: 2rem;
+}
+.mat-column-name {
+    flex: 0 0 3rem;
+    width: 3rem;
+}
+.mat-column-password {
+    flex: 0 0 2rem;
+    width: 2rem;
+}
+.mat-column-label {
+    flex: 0 0 3rem;
+    width: 3rem;
+}
+.mat-column-status {
+    flex: 0 0 2rem;
+    width: 2rem;
+}
+.mat-column-email {
+    flex: 0 0 10rem;
+    width: 10rem;
+}
+.mat-column-tel {
+    flex: 0 0 10rem;
+    width: 10rem;
+}
+.mat-column-roles {
+    flex: 0 0 10rem;
+    width: 10rem;
+}

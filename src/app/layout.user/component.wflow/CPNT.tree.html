@@ -1,0 +1,61 @@
+
+<div class="mat-dialog-content">
+    <mat-tab-group>
+        <mat-tab label="按组织/姓名查">
+            <mat-form-field appearance="outline" (click)="$event.stopPropagation(); trigger0.openPanel()">
+                <mat-label>分公司</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input type="text" matInput [formControl]="rt" [matAutocomplete]="auto0" #trigger0="matAutocompleteTrigger"> 
+                <mat-autocomplete #auto0="matAutocomplete" [displayWith]="displayWith">
+                    <mat-option *ngFor="let opt of rootOpts | async " [value]="opt">{{opt.name}}</mat-option>
+                </mat-autocomplete>
+                <button mat-icon-button matSuffix color="warn" (click)="rt.setValue('');role.setValue('')"><mat-icon >close</mat-icon></button>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="outline" (click)="$event.stopPropagation(); trigger1.openPanel()">
+                <mat-label>部门</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input type="text" matInput [formControl]="role" [matAutocomplete]="auto1" #trigger1="matAutocompleteTrigger"  (focus)="!rt.value ? role.markAsTouched(): null"> 
+                <mat-autocomplete #auto1="matAutocomplete"  [displayWith]="displayWith">
+                    <mat-option *ngFor="let opt of roleOpts | async " [value]="opt">{{opt.name}}</mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="role.hasError('invalid')">{{role.errors.msg}}</mat-error>
+                <button mat-icon-button matSuffix color="warn" (click)="role.setValue('')"><mat-icon >close</mat-icon></button>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="outline"  (click)="$event.stopPropagation(); trigger2.openPanel()">
+                <mat-label>姓名</mat-label> 
+                <mat-icon matPrefix>search</mat-icon>
+                <input type="text" matInput [formControl]="usr" [matAutocomplete]="auto2" #trigger2="matAutocompleteTrigger"> 
+                <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="optionSelect($event)"[displayWith]="displayWith">
+                    <mat-option *ngFor="let opt of userOpts | async " [value]="opt">{{opt.name}}</mat-option>
+                </mat-autocomplete>
+                <button mat-icon-button matSuffix color="warn" (click)="usr.setValue('')"><mat-icon >close</mat-icon></button>
+            </mat-form-field>
+        </mat-tab>
+        <mat-tab label="按组织结构查">
+            <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" >
+                <!-- This is the tree node template for leaf nodes -->
+                <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding> 
+                    <button mat-raised-button *ngIf="selected == node" color="warn" (click)="onSelect(node)"><mat-icon>person</mat-icon>{{node.name}}</button>
+                    <button mat-button *ngIf="selected !== node" (click)="onSelect(node)"><mat-icon>person</mat-icon>{{node.name}}</button>
+                </mat-tree-node>
+                <!-- This is the tree node template for expandable nodes -->
+                <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+                    <button mat-raised-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name" *ngIf="selected == node && node.canSelect" color="warn" (click)="onSelect(node)">
+                        <mat-icon class="mat-icon-rtl-mirror">
+                            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                        </mat-icon>
+                        {{node.name}}
+                    </button>
+                    <button mat-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name" *ngIf="selected !== node || !node.canSelect"  (click)="onSelect(node)">
+                        <mat-icon class="mat-icon-rtl-mirror">
+                            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                        </mat-icon>
+                        {{node.name}}
+                    </button>
+                </mat-tree-node>
+            </mat-tree>
+        </mat-tab>
+    </mat-tab-group>
+</div>

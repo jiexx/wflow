@@ -1,0 +1,12 @@
+::ng-deep .nopadding  .mat-expansion-panel-body {
+    padding:  0 !important;
+}
+
+::ng-deep .h12 { 
+    min-height: 1.2rem !important
+}
+
+::ng-deep .mat-step-header .mat-step-icon  {
+    background-color: #ff4c00; 
+    color: white;
+ }

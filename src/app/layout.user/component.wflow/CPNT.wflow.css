@@ -1,0 +1,31 @@
+mat-form-field {
+    width: 100%;
+}
+.mat-icon-big {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+}
+::ng-deep .focused .mat-form-field-appearance-outline .mat-form-field-outline  {
+    background-color: #ffc9b3;
+    border-radius: 5px;
+}
+
+::ng-deep .mat-step-header .mat-step-icon  {
+    background-color: #ff4c00; 
+    color: white;
+ }
+button{
+    color: white
+}
+
+/* mat-card{
+    width: fit-content;
+} */
+::ng-deep div:nth-child(2) > groups > mat-card {
+    width: 27rem;
+}
+
+::ng-deep .cdk-overlay-pane {
+    min-width: 27rem;
+}

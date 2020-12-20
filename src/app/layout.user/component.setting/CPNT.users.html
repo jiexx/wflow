@@ -1,0 +1,31 @@
+<div  fxLayout="cloumn"  fxLayoutAlign="center" fxFill >
+    <div style="margin: 2rem;" fxLayout.gt-md="row" fxLayout.lt-md="column" fxLayoutAlign.gt-md="start start" fxLayoutAlign.lt-md="start stretch" fxLayoutGap="1rem" fxFlex.gt-md="70">
+        <mat-card fxFlex>
+            <mat-card-header>
+                <mat-card-title >
+                    用户查询
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <ng-container *ngComponentOutlet="treer; injector: inj"></ng-container>
+            </mat-card-content>
+        </mat-card>
+        <mat-card fxFlex="grow">
+            <mat-card-header>
+                <mat-card-title >
+                    详细信息
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <tabler [columns]="columns" [layout]="'vertical'" [pageSize]="0" [(model)]="users"></tabler>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button (click)="append()">新增</button>
+                <div fxFlex></div>
+                <button mat-button (click)="remove()">删除</button>
+                <button mat-button  (click)="commit()">提交</button>
+            </mat-card-actions> 
+        </mat-card>
+    </div>
+</div>
+<dlg></dlg>

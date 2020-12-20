@@ -1,0 +1,20 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <div fxLayout="row">
+        <div fxFlex="none">
+            <img mat-card-avatar [src]="avatar" *ngIf="avatar">
+            <mat-icon mat-card-avatar *ngIf="!avatar">account_circle</mat-icon>
+        </div>
+        <div fxFlex="grow" class="mat-card-header-text">
+            <ctextarea [(model)]="model.textarea"></ctextarea>
+            <attachments [(model)]="model.textarea.attachments"></attachments>
+            <br>
+            <div fxLayout.gt-md="row wrap" fxLayoutAlign.gt-md="space-between center" fxLayout.lt-md="column"  fxLayoutAlign.lt-md="center stretch">
+                <actions  [state]="state" [actions]="actions" [forwards]="forwards" [(model)]="model.action"></actions>
+                <div fxLayout="row" fxLayoutAlign="end center">
+                    <button mat-button (click)="cancel()" class="text-grey" >取消</button>
+                    <button mat-button (click)="submit()" class="text-grey" >确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

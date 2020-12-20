@@ -1,0 +1,17 @@
+/* ::ng-deep .nopadding  .mat-expansion-panel-body {
+    padding:  0 !important;
+} */
+
+::ng-deep .mat-form-field.nopadding > .mat-form-field-wrapper {
+    margin-bottom: -1.25em;
+    padding-bottom: 0;
+}
+ctextarea {
+    margin-bottom: 0 !important;
+}
+attachments {
+    margin-bottom: 0 !important;
+}
+div {
+    margin-bottom: 0 !important;
+}

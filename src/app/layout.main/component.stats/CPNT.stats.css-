@@ -1,0 +1,15 @@
+::ng-deep .nopadding  .mat-expansion-panel-body {
+    padding:  0 !important;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+}
+  
+th, td {
+    overflow: hidden;
+    width:auto;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

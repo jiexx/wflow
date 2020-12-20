@@ -1,0 +1,63 @@
+<table #container mat-table [dataSource]="dataSource" matSort *ngIf="layout=='horizontal'">
+    <ng-container *ngFor="let col of columns; let j = index" [matColumnDef]="col.position">
+        <ng-container *ngIf="col.title">
+            <ng-container *ngIf="col.sort">
+                <th mat-header-cell *matHeaderCellDef  mat-sort-header   [ngStyle]="col.style(0,j)"> {{col.title}}</th>
+            </ng-container>
+            <ng-container *ngIf="!col.sort">
+                <th mat-header-cell *matHeaderCellDef [ngStyle]="col.style(0,j)"> {{col.title}}</th>
+            </ng-container>
+        </ng-container>
+        <td mat-cell *matCellDef="let row; let i = index;" [ngStyle]="col.style(i,j)">
+            <ng-container *ngIf="col.text">{{row[col.position]}}</ng-container>
+            <div *ngIf="col.html" [innerHTML]="row[col.position]"></div>
+            <mat-form-field *ngIf="col.input" floatLabel="never" [appearance]="col.input.appearance" (change)="edit(row[col.position], col.position, i, j)">  
+                <input matInput [type]="col.input.type"  [value]="row[col.position]" [(ngModel)]="row[col.position]" >
+            </mat-form-field>
+            <mat-form-field *ngIf="col.select" [appearance]="col.select.appearance" (click)="console.log('....',trigger);$event.stopPropagation(); trigger.openPanel()" >
+                <input type="text" #trigger="matAutocompleteTrigger" matInput [value]="displayBy(row[col.position], col.select.options)" [matAutocomplete]="auto"  >
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="row[col.position] = $event.option.value.id;edit(row[col.position], col.position, i, j)" [displayWith]="displayWith">
+                    <mat-option *ngFor="let opt of col.select.options;" [value]="opt">{{opt.name}}</mat-option>  
+                </mat-autocomplete>
+            </mat-form-field>
+            <ng-container *ngIf="col.change">
+                <button mat-button (click)="change(row,i)"><mat-icon>edit</mat-icon></button>
+            </ng-container>
+            <ng-container *ngIf="col.remove">
+                <button mat-button (click)="remove(row,i)"><mat-icon>remove</mat-icon></button>
+            </ng-container>
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="columns" ></tr>
+    <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+</table>
+<table #container mat-table [dataSource]="dataSource" matSort *ngIf="layout=='vertical' && rows">
+    <ng-container  [matColumnDef]="col" *ngFor="let col of rows; let j = index">
+        
+        <td mat-cell *matCellDef="let row; let i = index;" [ngStyle]="columns[i].style(i,j)">
+            <b *ngIf="j==0">{{row[col]}}</b>
+            <ng-container *ngIf="j!=0">
+                <ng-container *ngIf=" columns[i].text"><span >{{row[col]}}</span></ng-container>
+                <div *ngIf="columns[i].html" [innerHTML]="row[col]"></div>
+                <mat-form-field *ngIf="columns[i].input" floatLabel="never" [appearance]="columns[i].input.appearance" (change)="edit(row[col], columns[i].position, i, j)">  
+                    <input matInput [type]="columns[i].input.type"  [value]="row[col]" [(ngModel)]="row[col]">
+                </mat-form-field>
+                <mat-form-field *ngIf="columns[i].select" [appearance]="columns[i].select.appearance">
+                    <input type="text" matInput [value]="displayBy(row[col], columns[i].select.options)" [matAutocomplete]="auto"  >
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="row[col] = $event.option.value.id;edit(row[col], columns[i].position, i, j)" [displayWith]="displayWith">
+                        <mat-option *ngFor="let opt of columns[i].select.options;" [value]="opt">{{opt.name}}</mat-option>  
+                    </mat-autocomplete>
+                </mat-form-field>
+                <ng-container *ngIf="columns[i].change">
+                    <button mat-button (click)="change(row,i)"><mat-icon>edit</mat-icon></button>
+                </ng-container>
+                <ng-container *ngIf="columns[i].remove">
+                    <button mat-button (click)="remove(row,i)"><mat-icon>remove</mat-icon></button>
+                </ng-container>
+            </ng-container>
+            
+        </td>
+    </ng-container>
+    <tr mat-row *matRowDef="let row; columns: rows;"></tr>
+</table>
+<mat-paginator *ngIf="pageSize > 0" [length]="pageLen" [pageSize]="pageSize" showFirstLastButtons></mat-paginator>

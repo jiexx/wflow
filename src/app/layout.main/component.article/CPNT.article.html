@@ -1,0 +1,37 @@
+<div fxFill style="padding: 1rem">
+    <div fxFlex>
+        <mat-accordion multi>
+            <mat-expansion-panel [expanded]=true>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <b>解决方案 ID: {{data.id}}</b>
+                        <mat-panel-description></mat-panel-description>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div fxLayout="column" fxLayoutAlign="center stretch" fxFill fxLayoutGap="2rem">
+                    <mat-divider></mat-divider>
+                    <div fxFlex fxLayout="row" fxLayoutAlign="space-between start">
+                        <div fxFlex fxLayout="column">
+                                <p  >{{data.solution}}</p>
+                            <mat-chip-list *ngIf="data.tags  && data.tags.length > 0 && data.tags.push">
+                                <mat-chip color="primary" class="h12"  *ngFor="let tag of data.tags; let j = index ">{{(tag.name)}}</mat-chip>
+                            </mat-chip-list>
+                        </div>
+                        <div fxFlex="none" fxLayout="column" fxHide.lt-md>
+                            <div fxFlex>发布时间:{{toLocalString(data.datatime)}}</div>
+                            <mat-panel-description>
+                                <mat-icon style="font-size:0.5rem;width:0.5rem;height:0.5rem">visibility</mat-icon>
+                                &nbsp;20浏览
+                            </mat-panel-description>
+                        </div>
+                    </div>
+                    <div>
+                        
+                        <p >{{data.content}}</p>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>

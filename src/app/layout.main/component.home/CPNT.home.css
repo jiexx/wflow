@@ -1,0 +1,32 @@
+
+
+.left-menu-card{
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+}
+
+::ng-deep.mat-form-field-underline {
+    background-color: lightgray !important;
+} 
+  
+::ng-deep.mat-form-field-ripple {
+    background-color: var(--warn-color) !important;
+}
+.mat-button {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pend-button {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    width: auto;
+    z-index: 100;
+}
+mat-card {
+    /* padding-top: 0; */
+    padding-bottom: 8px;
+}
