@@ -9,9 +9,9 @@ import { CDialog } from 'app/common/dialog/CPNT.dialog';
 import { IDialogMessage } from 'app/common/dialog/ITF.dialog';
 import { CDDlg } from 'app/common/dialog/CPNT.ddlg';
 //import { StatsDetail } from '../component.stats/statsDetail';
-import { _storageurl } from 'config/index';
+import { _storageurl } from 'app/common/config';
 import { DomSanitizer } from '@angular/platform-browser';
-import { __colName } from 'app/common/wflow';
+import { __colName } from 'app/common/workflow';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormControl, FormGroup } from '@angular/forms';
 

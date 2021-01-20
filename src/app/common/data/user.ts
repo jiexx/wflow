@@ -1,13 +1,12 @@
 import { Router, NavigationEnd } from '@angular/router';
-import { Data, IResult } from 'config/index';
+import { Data, IResult } from 'app/common/config';
 import { interval, Observable, Subject } from 'rxjs';
 import { Injectable, OnInit, OnDestroy, NgModule, ChangeDetectorRef } from '@angular/core';
-import { EDataPath, _url, _storageurl } from 'config/index';
+import { EDataPath, _url, _storageurl } from 'app/common/config';
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
 import { IProductConf, IProduct, IUserWork } from 'app/intf/ITF.product';
-import { IPlan, IContext, ISignal, IHandle, ICondition, Manager } from '../workflow/index';
-import { PlannerModel, __colName, Role } from '../wflow';
-import { Content } from '@angular/compiler/src/render3/r3_ast';
+import { IPlan } from 'app/common/workflow';
+import { IContext, ISignal, PlannerModel, __colName, Role } from 'app/common/workflow';
 
 const conf : IPlan = {
     root: 't_anonymous',
@@ -70,25 +69,14 @@ export class UserService {
 
     constructor(public router : Router, public http: HttpClient){
         this.data = new Data(http);
-        this.init();
         if(!localStorage.getItem('logined1')){
             this.router.navigate(['/user/login'])
         }
     }
-    async init(){
-        this.plan = new Manager({router:this.router, remote:this.data.remote, storage:this.data.storage});
-        this.plan.build(conf, 'register')
-        this.schedid = await this.plan.start('register', '0');
-    }
     subtotal : {I:number, V:number, R:number, C:number, X:number}
     data : Data;
-    plan : Manager;
     schedid : string; 
 
-    async next(params : {[key : string] : string}): Promise<void> {
-        await this.plan.move(this.schedid, params);
-        console.log(this.plan.curr(this.schedid));
-    }
 
     async getProfile(): Promise<IResult> {
         let profile = this.data.storage.get('save', 'profile');

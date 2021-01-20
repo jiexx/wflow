@@ -12,7 +12,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import {merge, Observable, of as observableOf, from} from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { UserService } from 'app/common/data/user';
-import { __colName } from 'app/common/wflow';
+import { __colName } from 'app/common/workflow';
 import { IColumn } from 'app/common/table/CPNT.table';
 import { CTree, BASE } from '../component.wflow/CPNT.tree';
 import { DData } from 'app/common/dialog/CPNT.ddlg';

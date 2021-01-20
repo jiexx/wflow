@@ -7,8 +7,7 @@ import { startWith, map } from 'rxjs/operators';
 import { CDialog } from 'app/common/dialog/CPNT.dialog';
 import { IDialogMessage } from 'app/common/dialog/ITF.dialog';
 import { CInfo } from 'app/common/dialog/CPNT.info';
-import { ViewerMgr } from 'app/common/wflow/viewer.mgr';
-import { Viewer } from 'app/common/wflow/viewer';
+import { ViewerMgr, Viewer } from 'app/common/workflow';
 import { CDDlg } from 'app/common/dialog/CPNT.ddlg';
 import { CChangeWflow } from './CPNT.change.wflow';
 

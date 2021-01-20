@@ -2,7 +2,7 @@ import { Component, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'app/common/data/user';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { IResult } from 'config/index';
+import { IResult } from 'app/common/config';
 import { IUploaderResult } from 'app/common/uploader/CPNT.uploader';
 
 

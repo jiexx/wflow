@@ -1,13 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, AfterViewChecked, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormControl } from '@angular/forms';
 import { UserService } from 'app/common/data/user';
-import { Action, ActionLabel, arrayEqual } from 'app/common/workflow';
 import { BusService, IBusMessage, Bus } from 'app/common/bus/bus';
-import { Observable } from 'rxjs';
-import { CInfo } from 'app/common/dialog/CPNT.info';
-import { IDialogMessage } from 'app/common/dialog/ITF.dialog';
-import { _storageurl } from 'config/index';
+import { _storageurl } from 'app/common/config';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IPost } from 'app/common/post/CPNT.post';
 

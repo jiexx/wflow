@@ -8,7 +8,7 @@ export interface IContext {
 }
 
 export interface ISignal {
-    code?: 'yes' | 'no';
+    code?: 'yes' | 'no' | string;
     [key: string]: any;
 }
 
@@ -26,7 +26,15 @@ export interface INode {
 }
 
 export type IHandle = (context: IContext, signal: ISignal) => ISignal;
-
+export type ICondition = (context: IContext, signal: ISignal) => boolean;
+export interface IBounds {
+    [name: string]: INode;
+}
+export interface IPlan {
+    flows : string[];
+    root : string;
+    [key : string] : string[] | string | IHandle | { [flowName : string] : ICondition } ;
+}
 ///////////////////////class///////////////////////////////
 abstract class CNode implements INode {
     abstract name(): string;

@@ -3,10 +3,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, NgModel } from '@angular/forms';
 import { Bus, BusService } from 'app/common/bus/bus';
 import { UserService } from 'app/common/data/user';
-import { _storageurl } from 'config/index';
+import { _storageurl } from 'app/common/config';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IUploaderResult } from '../uploader/CPNT.uploader';
-import { Model } from '../wflow';
+import { Model } from '../../../../workflow';
 
 export interface IAttachment {
     a: string;

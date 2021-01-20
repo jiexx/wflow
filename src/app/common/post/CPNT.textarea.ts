@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Bus, BusService } from 'app/common/bus/bus';
 import { UserService } from 'app/common/data/user';
-import { _storageurl } from 'config/index';
+import { _storageurl } from 'app/common/config';
 import { DomSanitizer } from '@angular/platform-browser';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { IUploaderResult } from '../uploader/CPNT.uploader';
