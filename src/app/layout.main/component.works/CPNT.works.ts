@@ -7,7 +7,7 @@ import { BusService, IBusMessage, Bus } from 'app/common/bus/bus';
 import { Observable } from 'rxjs';
 import { CInfo } from 'app/common/dialog/CPNT.info';
 import { IDialogMessage } from 'app/common/dialog/ITF.dialog';
-import { _storageurl } from 'app/common/data/path';
+import { _storageurl } from 'config/index';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IPost } from 'app/common/post/CPNT.post';
 

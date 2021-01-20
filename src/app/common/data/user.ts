@@ -1,8 +1,8 @@
 import { Router, NavigationEnd } from '@angular/router';
-import { Data, IResult } from './data';
+import { Data, IResult } from 'config/index';
 import { interval, Observable, Subject } from 'rxjs';
 import { Injectable, OnInit, OnDestroy, NgModule, ChangeDetectorRef } from '@angular/core';
-import { EDataPath, _url, _storageurl } from './path';
+import { EDataPath, _url, _storageurl } from 'config/index';
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
 import { IProductConf, IProduct, IUserWork } from 'app/intf/ITF.product';
 import { IPlan, IContext, ISignal, IHandle, ICondition, Manager } from '../workflow/index';

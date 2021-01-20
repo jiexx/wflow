@@ -1,10 +1,10 @@
 
 const express = require('express');
 // import { WorkflowManager, Action} from '../src/app/common/workflow/index';
-import { Planner, __debug, __db, __dbName, __colName, arrayEqual, Role } from '../src/app/common/wflow/index';
+import { Planner, __debug, __db, __dbName, __colName, arrayEqual, Role } from 'workflow/index';
 import { Mysql, Mongodb } from './database';
 import { request } from 'http';
-import { EDataPath } from '../src/app/common/data/path';
+import { EDataPath } from 'config/index';
 //import { accomplished } from './app';
 const accomplished = (state: any) => {
     return {}.toString.call(state) == "[object String]" ? state == 'V' || state == 'SS' || state == 'S' || state == 'D' : false;

@@ -9,7 +9,7 @@ import { CDialog } from 'app/common/dialog/CPNT.dialog';
 import { IDialogMessage } from 'app/common/dialog/ITF.dialog';
 import { CDDlg } from 'app/common/dialog/CPNT.ddlg';
 //import { StatsDetail } from '../component.stats/statsDetail';
-import { _storageurl } from 'app/common/data/path';
+import { _storageurl } from 'config/index';
 import { DomSanitizer } from '@angular/platform-browser';
 import { __colName } from 'app/common/wflow';
 import { MatPaginator } from '@angular/material/paginator';

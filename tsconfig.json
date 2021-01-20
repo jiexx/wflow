@@ -19,5 +19,9 @@
       "es2017",
       "dom", /* "dom.iterable" */
     ],
-  }
+    "paths": {
+      "config/*": ["../config/*"],
+      "workflow/*": ["../workflow/*"],
+    },
+  },
 }
